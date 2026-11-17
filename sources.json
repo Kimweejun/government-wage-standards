@@ -1,0 +1,338 @@
+{
+ "asOf": "2026-11-17",
+ "sources": {
+  "S01": {
+   "org": "최저임금위원회",
+   "title": "연도별 최저임금 결정현황",
+   "docNo": "",
+   "date": "2026년 적용 · 2027년 결정액 포함",
+   "section": "시간급, 월 209시간 환산",
+   "url": "https://www.minimumwage.go.kr/minWage/policy/decisionMain.do",
+   "kind": "1차"
+  },
+  "S02": {
+   "org": "법제처",
+   "title": "최저임금법 및 시행령",
+   "docNo": "",
+   "date": "현행",
+   "section": "법 제5조제2항(수습 감액 요건·단순노무 제외), 시행령 제3조(감액 금액)",
+   "url": "https://www.law.go.kr/법령/최저임금법",
+   "kind": "1차"
+  },
+  "S03": {
+   "org": "법제처",
+   "title": "국가연구개발혁신법 시행령",
+   "docNo": "",
+   "date": "현행",
+   "section": "제19조·제20조·제26조, 별표 1·2",
+   "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsId=013933",
+   "kind": "1차"
+  },
+  "S04": {
+   "org": "과학기술정보통신부",
+   "title": "국가연구개발사업 연구개발비 사용 기준",
+   "docNo": "고시 제2026-38호",
+   "date": "2026-05-06 발령·시행",
+   "section": "제39조제5항(출연연 130%), 제40조제4항(학생 하한)·제10항(10%), 제48조제4·5항, 제49조, 제57조, 제65조제4항(현금 예외)·제7항, 제26·73·74조, 제91조제5항",
+   "url": "https://www.law.go.kr/admRulInfoP.do?admRulSeq=2100000278740",
+   "kind": "1차"
+  },
+  "S05": {
+   "org": "과학기술정보통신부",
+   "title": "연구개발비 사용 기준 개정안 행정예고",
+   "docNo": "공고 제2026-1017호",
+   "date": "2026-10-15 공고 · 2027-01-01 시행 예정",
+   "section": "연구수당 1인 지급 상한(제26조제6항 신설), 보안수당, 단계 간 잔액의 인건비 사용(제71조제3항)",
+   "url": "https://www.msit.go.kr/bbs/view.do?bbsSeqNo=84&mId=109&mPid=103&nttSeqNo=3186413&sCode=user",
+   "kind": "1차"
+  },
+  "S06": {
+   "org": "과학기술정보통신부",
+   "title": "학생인건비 통합관리기관 목록",
+   "docNo": "공고 제2026-1033호",
+   "date": "2026-10-21 공고",
+   "section": "고시 제86조제1항에 따른 지정 기관",
+   "url": "https://www.msit.go.kr/bbs/view.do?bbsSeqNo=96&mId=310&mPid=121&nttSeqNo=3186636&sCode=user",
+   "kind": "1차"
+  },
+  "S07": {
+   "org": "KISTEP",
+   "title": "국가연구개발혁신법 매뉴얼(2026년 7월 개정)",
+   "docNo": "",
+   "date": "2026-07-15 게시",
+   "section": "본권·부록·신구조문대비표",
+   "url": "https://www.kistep.re.kr/board.es?act=view&bid=0003&list_no=94788&mid=a10402000000",
+   "kind": "1차"
+  },
+  "S08": {
+   "org": "중소벤처기업부",
+   "title": "중소기업기술개발 지원사업 운영요령",
+   "docNo": "고시 제2026-6호",
+   "date": "2026-01-21 시행",
+   "section": "제14·19·21·22조 및 부칙",
+   "url": "https://www.law.go.kr/admRulLsInfoP.do?admRulSeq=2100000273462",
+   "kind": "1차"
+  },
+  "S09": {
+   "org": "중소벤처기업부",
+   "title": "중소기업기술개발 지원사업 관리지침",
+   "docNo": "",
+   "date": "2026-10-23 시행(같은 해 8-3 시행본도 있음)",
+   "section": "9. 다. 1) 직접비 인건비, 14. 다. 2) 불인정 기준, 부칙. 원문은 IRIS 자료실(2026-10-23 등록) 첨부",
+   "url": "https://research.uos.ac.kr/node/8940",
+   "kind": "2차"
+  },
+  "S10": {
+   "org": "중소벤처기업부",
+   "title": "민관공동기술사업화 R&D(구매연계·상생협력) 제3차 시행계획 공고",
+   "docNo": "",
+   "date": "2026년",
+   "section": "주요 변경사항, 비목별 산정기준",
+   "url": "https://www.iris.go.kr/contents/retrieveBsnsAncmView.do?ancmId=021714",
+   "kind": "1차"
+  },
+  "S11": {
+   "org": "중소벤처기업부",
+   "title": "표준공정 기반 공정최적화 기술개발사업 시행계획 공고",
+   "docNo": "공고 제2026-484호",
+   "date": "2026-07-30 공고",
+   "section": "붙임 주요 연구개발비 산정기준, 청년 의무채용",
+   "url": "https://www.iris.go.kr/contents/retrieveBsnsAncmView.do?ancmId=023077&ancmPrg=ancmIng",
+   "kind": "1차"
+  },
+  "S12": {
+   "org": "통계청 지표누리",
+   "title": "월평균 임금(상용근로자 임금총액)",
+   "docNo": "",
+   "date": "2025년 연간 · 2026-11-17 열람",
+   "section": "상용근로자 임금총액(고용노동부 사업체노동력조사)",
+   "url": "https://www.index.go.kr/unity/potal/eNara/sub/showStblGams3.do?freq=Y&idx_cd=F0125&period=N&stts_cd=F012501",
+   "kind": "1차"
+  },
+  "S13": {
+   "org": "중소벤처기업부",
+   "title": "2026년 중소기업 연구인력지원사업 공고",
+   "docNo": "공고 제2026-69호",
+   "date": "2026-02-04 공고",
+   "section": "붙임 내역사업별 지원계획(신진·고경력·공공연 파견), 기준연봉·지원비율",
+   "url": "https://www.mss.go.kr/site/smba/ex/bbs/View.do?bcIdx=1065325&cbIdx=310&parentSeq=1065325",
+   "kind": "1차"
+  },
+  "S14": {
+   "org": "경기도일자리재단",
+   "title": "2026년 중소기업 연구인력지원사업(파견) 11월 공고 안내",
+   "docNo": "",
+   "date": "2026-11 게시",
+   "section": "공공연 파견 연봉 지원·모집 조건",
+   "url": "https://job.gg.go.kr/entSprt/detail.do?seq=5218",
+   "kind": "2차"
+  },
+  "S15": {
+   "org": "과학기술정보통신부",
+   "title": "기업부설연구소법 시행규칙",
+   "docNo": "과기정통부령 제163호",
+   "date": "2026-02-01 시행",
+   "section": "제2조 제4항~제6항(연구전담요원 자격)",
+   "url": "https://www.law.go.kr/lsLinkCommonInfo.do?lspttninfSeq=198229",
+   "kind": "1차"
+  },
+  "S16": {
+   "org": "산업통상부(발령 당시 산업통상자원부)",
+   "title": "산업기술혁신사업 공통 운영요령",
+   "docNo": "고시 제2024-218호",
+   "date": "2024-12-30 시행",
+   "section": "제20조제2항(최소 계상률 10%)·제24조, 별표 4(현금 인정 기술분야)·별표 5(연구개발비 산정기준)",
+   "url": "https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2100000251982",
+   "kind": "1차"
+  },
+  "S17": {
+   "org": "산업통상부",
+   "title": "2026년 민군융합핵심소재자립화기술개발사업 신규지원 대상과제 공고",
+   "docNo": "공고 제2026-374호",
+   "date": "2026-05-26 공고",
+   "section": "인건비 현금 산정기준, 청년인력 채용",
+   "url": "https://www.iris.go.kr/contents/retrieveBsnsAncmView.do?ancmId=021796&bsnsAncmSn=1&bsnsYyDetail=2026&chngRcveDeFro=2026%2F06%2F02&chngRcveDeTo=2026%2F06%2F26&sorgnBsnsCd=S051592",
+   "kind": "1차"
+  },
+  "S18": {
+   "org": "산업통상부",
+   "title": "산업기술혁신사업 공통 운영요령 개정안 행정예고",
+   "docNo": "공고 제2026-558호",
+   "date": "2026-09-01 행정예고 · 11-17 현재 미고시",
+   "section": "최소 인건비계상률 규정(제20조제2항·별표 6) 삭제 등",
+   "url": "https://www.motir.go.kr/kor/article/ATCLa6723dc7b/519/view?pageIndex=1",
+   "kind": "1차"
+  },
+  "S19": {
+   "org": "과학기술정보통신부",
+   "title": "2026년 AI반도체를 활용한 K-클라우드 기술개발 신규지원 대상과제 공고",
+   "docNo": "공고 제2026-0444호",
+   "date": "2026-04-10 공고",
+   "section": "영리기관 인건비 현금계상, 청년 의무채용",
+   "url": "https://www.iris.go.kr/contents/retrieveBsnsAncmView.do?ancmId=019748&bsnsAncmSn=3&bsnsYyDetail=2026&chngRcveDeFro=2026%2F04%2F10&chngRcveDeTo=2026%2F04%2F23&sorgnBsnsCd=S049922",
+   "kind": "1차"
+  },
+  "S20": {
+   "org": "창업진흥원",
+   "title": "중소기업창업 지원사업 통합관리지침(제14차 개정)",
+   "docNo": "",
+   "date": "2026-01-22 최종수정",
+   "section": "사업비 집행 기준",
+   "url": "https://www.k-startup.go.kr/user/board/webRFRR_view_reference.do?id=172153&schM=view",
+   "kind": "1차"
+  },
+  "S21": {
+   "org": "중소벤처기업부",
+   "title": "2026년 예비창업패키지 예비창업자 모집공고",
+   "docNo": "공고 제2026-142호",
+   "date": "2026-02-27 공고 · 수정공고 제2026-143호·제2026-207호",
+   "section": "사업화 자금 집행 비목 인건비",
+   "url": "https://www.mss.go.kr/site/smba/ex/bbs/View.do?bcIdx=1065929&cbIdx=310&parentSeq=1065929",
+   "kind": "1차"
+  },
+  "S22": {
+   "org": "한국콘텐츠진흥원",
+   "title": "2026년 지역 대표 글로컬 콘텐츠 제작·재투자 지원 추천기업 모집 공고",
+   "docNo": "",
+   "date": "2026-03-17 공고",
+   "section": "지원금 사용범위, 대표자 인건비 재원",
+   "url": "https://welcon.kocca.kr/ko/info/business/1957322",
+   "kind": "1차"
+  },
+  "S23": {
+   "org": "경북테크노파크",
+   "title": "2026년 미래차 부품 기술융합 지원 사업 공고",
+   "docNo": "",
+   "date": "2026-02-26 기업마당 게시",
+   "section": "첨부 공고문(hwp)의 사업비·인건비",
+   "url": "https://www.bizinfo.go.kr/sii/siia/selectSIIA200Detail.do?pblancId=PBLN_000000000118921",
+   "kind": "1차"
+  },
+  "S24": {
+   "org": "전북테크노파크",
+   "title": "2026년 1차 혁신성장 R&D+ 지원사업 모집 공고",
+   "docNo": "공고 제2026-0048호",
+   "date": "2026-03-09 공고 · 03-16 기업마당 게시",
+   "section": "첨부 공고 [참고2] 사업비 편성기준(13쪽) 인건비·현금 한도",
+   "url": "https://www.bizinfo.go.kr/sii/siia/selectSIIA200Detail.do?pblancId=PBLN_000000000119510",
+   "kind": "1차"
+  },
+  "S25": {
+   "org": "행정안전부",
+   "title": "지방보조금 관리기준",
+   "docNo": "예규 제378호",
+   "date": "2026-08-18 시행",
+   "section": "보조사업 교부조건·집행 기준",
+   "url": "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000284062&chrClsCd=010201",
+   "kind": "1차"
+  },
+  "S26": {
+   "org": "고용노동부",
+   "title": "2026년 청년일자리도약장려금 사업운영 지침(10월 개정)",
+   "docNo": "",
+   "date": "2026-10-22 게시",
+   "section": "지원대상·지원내용, 수도권·비수도권 유형, 중복지원 제한. 10월 개정은 장기근속인센티브 지급 방법",
+   "url": "https://www.moel.go.kr/news/notice/noticeView.do?bbs_seq=20261000802",
+   "kind": "1차"
+  },
+  "S27": {
+   "org": "고용24",
+   "title": "청년일자리도약장려금 제도안내",
+   "docNo": "",
+   "date": "2026년 사업 · 2026-11-17 열람",
+   "section": "지원내용, 지원자격, 채용 후 신청 예외",
+   "url": "https://www.work24.go.kr/cm/c/f/1100/selecSystInfo.do?currentPageNo=1&recordCountPer=10&systClId=SC00000117&systId=SI00000318",
+   "kind": "1차"
+  },
+  "S28": {
+   "org": "재정경제부(2026-01-02 출범, 구 기획재정부)",
+   "title": "2026년 학술연구용역 인건비 기준단가",
+   "docNo": "",
+   "date": "2026-01-14 게시",
+   "section": "월 22일·참여율 50% 기준 직급별 단가(2025년 소비자물가 2.1% 반영)",
+   "url": "https://www.mofe.go.kr/lw/denm/detailTbDenmView.do?menuNo=7090100&searchBbsId1=MOSFBBS_000000000119&searchNttId1=MOSF_000000000076494",
+   "kind": "1차"
+  },
+  "S29": {
+   "org": "재정경제부",
+   "title": "(계약예규) 예정가격작성기준",
+   "docNo": "계약예규 제171호",
+   "date": "2026-08-25 시행",
+   "section": "제23조·제26조, 별표 5",
+   "url": "https://www.law.go.kr/admRulLsInfoP.do?admRulSeq=2100000284228",
+   "kind": "1차"
+  },
+  "S30": {
+   "org": "행정안전부",
+   "title": "지방자치단체 입찰 및 계약집행기준",
+   "docNo": "예규 제395호",
+   "date": "2026-11-06 시행",
+   "section": "제2장 별표 2(학술연구용역 단가)",
+   "url": "https://www.law.go.kr/admRulLsInfoP.do?admRulSeq=2100000287646",
+   "kind": "1차"
+  },
+  "S31": {
+   "org": "국가기술표준원",
+   "title": "2026년 연구용역 입찰공고 첨부(원가계산서 작성요령)",
+   "docNo": "공고 제2026-68호",
+   "date": "2026년",
+   "section": "100% 환산 단가 표기 사례",
+   "url": "https://www.g2b.go.kr/pn/pnp/pnpe/UntyAtchFile/downloadFile.do?bidPbancNo=R26BK01368127&bidPbancOrd=000&fileSeq=2&fileType=&prcmBsneSeCd=03",
+   "kind": "1차"
+  },
+  "S32": {
+   "org": "국립환경과학원",
+   "title": "연구용역과제 계약 및 정산규정",
+   "docNo": "",
+   "date": "현행",
+   "section": "참여인력 직급별 자격·기능수준",
+   "url": "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000280926",
+   "kind": "1차"
+  },
+  "S33": {
+   "org": "법제처",
+   "title": "정부조직법 개정이유(법률 제21065호)",
+   "docNo": "법률 제21065호",
+   "date": "2025-10-01 공포",
+   "section": "산업통상부 2025-10-01, 재정경제부·기획예산처 2026-01-02 시행",
+   "url": "https://www.law.go.kr/LSW/lsRvsRsnListP.do?lsId=001720&chrClsCd=010202&lsRvsGubun=all",
+   "kind": "1차"
+  },
+  "S34": {
+   "org": "중소기업기술정보진흥원(SMTECH)",
+   "title": "2026년 신진 연구인력 채용지원 공고 상세",
+   "docNo": "공고 제2026-69호",
+   "date": "2026-02-04 공고",
+   "section": "지원대상·지원내용(기준연봉, 40%·50%, 기업별 1명)",
+   "url": "https://www.smtech.go.kr/front/ifg/no/notice02_detail.do?buclYy=2026&ancmId=S02834&buclCd=S6042&dtlAncmSn=1&schdSe=MO5005&aplySn=1",
+   "kind": "1차"
+  },
+  "S35": {
+   "org": "중소기업기술정보진흥원(SMTECH)",
+   "title": "2026년 공공연 연구인력 파견지원 11월 공고 상세",
+   "docNo": "",
+   "date": "2026-11 공고",
+   "section": "파견 연봉 50%, 정규직 채용 시 60%",
+   "url": "https://www.smtech.go.kr/front/ifg/no/notice02_detail.do?buclYy=&ancmId=S02847&buclCd=S6041&dtlAncmSn=11&schdSe=MO5005&aplySn=1",
+   "kind": "1차"
+  },
+  "S36": {
+   "org": "한국산업기술진흥협회(KOITA)",
+   "title": "고경력 연구인력 채용지원 안내",
+   "docNo": "",
+   "date": "2026-11-17 열람",
+   "section": "연봉 50%, 연간 최대 5,000만 원",
+   "url": "https://www.koita.or.kr/conts/102002006000000.do",
+   "kind": "1차"
+  },
+  "S37": {
+   "org": "고용노동부",
+   "title": "2027년 적용 최저임금 고시",
+   "docNo": "고시 제2026-60호",
+   "date": "2026-08-05 고시",
+   "section": "2027-01-01부터 시간급 10,700원",
+   "url": "https://www.moel.go.kr/info/lawinfo/instruction/view.do?bbs_seq=20260800150",
+   "kind": "1차"
+  }
+ }
+}

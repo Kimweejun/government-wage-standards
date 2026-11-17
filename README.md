@@ -1,26 +1,50 @@
 # 정부지원사업 인건비 기준 조회
 
-공개 법령·고시·사업공고를 바탕으로 2026년 11월 17일 기준의 적용 근거를 조회합니다. 기관·사업·최종학력과 인력 유형을 선택하고, 필요한 경우 급여·연차·협약일을 입력합니다.
+2026년 정부지원사업의 인건비 기준(계상률, 학생인건비 하한, 채용지원 금액, 현금 계상 예외, 학술연구용역 단가 등)을 사업·학력·인력 유형별로 검색하고 원문 근거를 확인하는 도구입니다. 원문 확인일은 **2026-11-17**입니다.
 
-## HTML
+> 공개 법령·고시·공고를 정리한 참고 자료입니다. 실제 과제 편성은 해당 공고 회차와 협약에 편입된 규정이 우선합니다.
 
-`index.html`을 브라우저에서 직접 엽니다. GitHub Pages를 사용할 때는 기본 브랜치 루트의 `index.html`을 게시합니다. 입력값은 브라우저 안에서 처리됩니다.
+## 웹 페이지 (`index.html`)
 
-`page.html`은 생성용 템플릿입니다. `wage_rules.py`나 템플릿을 바꾼 뒤 `python build_html.py`로 `index.html`을 다시 생성합니다.
+| 탭 | 내용 |
+|---|---|
+| 사업별 조회 | 핵심 수치 카드 8개, 키워드 검색(숫자는 쉼표 무시: `4100` → 4,100), 기관 칩·인력 유형·학력·상태 필터. 결과는 한 줄 요약으로 보이고 누르면 산정 기준·현금 계상 조건·증빙·근거가 펼쳐집니다. |
+| 학력별 비교표 | 고졸~박사 열로 최저임금, 학생 하한, 신진 기준연봉·지원액, 고경력 요건, 연구전담요원 경로 비교 |
+| 계산기 | 과제 인건비 계상액, 신진·고경력 지원액, 학술용역 인건비, 학생인건비 지급액, 최저임금 충족 여부 |
+| 출처 | S01~S37 원문 링크, 문서번호, 시행일, 1차·2차 구분. Word 보고서의 [S번호]와 같습니다. |
+| 용어·변경 이력 | 용어 설명, 확인 필요·개정 예정 사항, 버전 기록 |
+
+- 학력을 고르면 그 학력이 지원 요건에 해당하지 않는 사업은 숨기고 숨긴 개수를 표시합니다.
+- 검색어·필터·펼친 항목은 주소(`#q=...`)에 저장되어 **조건 링크 복사**로 공유할 수 있습니다.
+- 입력값은 브라우저 안에서만 처리합니다. 외부 라이브러리가 없어 파일을 바로 열어도 동작합니다.
+
+## 데이터 수정과 빌드
+
+데이터 원본은 `wage_rules.py` 하나입니다. `page.html`은 화면 템플릿입니다.
+
+```powershell
+python wage_rules.py --check   # 출처 연결, 40%·50% 표, 단가 요약, 최저임금 환산 일관성 검사
+python build_html.py           # 검사 통과 시 index.html과 sources.json 생성
+```
+
+`sources.json`은 Word 보고서 등 다른 산출물이 같은 출처 번호를 쓰도록 내보내는 파일입니다.
 
 ## Python 조회
 
-Python 3.10 이상에서 별도 패키지 없이 실행됩니다.
+Python 3.10 이상, 외부 패키지 없음.
 
 ```powershell
-python wage_rules.py --help
-python wage_rules.py --program new-research-hire --grade hs
+python wage_rules.py 학생인건비                      # 키워드 검색
+python wage_rules.py 현금 신규채용 --brief           # 여러 단어는 AND, 한 줄 요약만
 python wage_rules.py --program new-research-hire --grade master --year 2 --salary 3800000
-python wage_rules.py --program mss-rd --role employee --agreement-date 2026-10-22
-python wage_rules.py --program student --grade hs --course bachelor --json
+python wage_rules.py --program mss-rd --agreement-date 2026-10-22
+python wage_rules.py --role student --course master --json
 python wage_rules.py --program municipal-contract --contract-rank 연구원
 ```
 
-`--salary`는 월 세전 원화입니다. 프로그램마다 산입 임금의 범위가 다릅니다. `--grade`는 취득한 최종학력이고 `--course`는 현재 재학 과정입니다. `--agreement-date`는 중기부 기술개발 관리지침의 적용 시점 확인에 사용합니다.
+`--salary`는 월 세전 원화, `--grade`는 취득한 최종학력, `--course`는 현재 재학 과정입니다. `--agreement-date`는 중기부 관리지침 적용본(2026-10-23 전후) 판단에 씁니다.
 
-표시된 숫자는 임금 하한, 계약연봉 요건, 예정가격 기준단가 또는 지원금 상한 중 표시된 항목에 해당합니다. 개인·사업장·과제의 적격 여부와 실제 인정액은 공고·협약·증빙으로 확인합니다.
+## 상태 표시
+
+- **현행**: 원문과 대조해 확인한 기준
+- **확인 필요**: 첨부 원문(hwp 등)과 대조하지 못했거나 재게시본으로만 확인한 기준. 항목의 "주의"에 이유를 적었습니다.

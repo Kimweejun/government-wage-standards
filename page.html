@@ -1,175 +1,512 @@
 <!doctype html>
 <html lang="ko">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="기관·사업·학력별 정부지원사업 인건비 금액과 원문 근거 조회">
+<meta name="description" content="2026년 정부지원사업 인건비 기준을 사업·학력·인력 유형별로 검색하고 원문 근거를 확인하는 조회 도구">
 <title>정부지원사업 인건비 기준 조회</title>
 <style>
-  :root{color-scheme:light;--ink:#142e34;--muted:#4e666b;--line:#cfddda;--surface:#fff;--accent:#146153;--wash:#eff6f3;--bg:#f7faf9;font-family:"Noto Sans KR","Malgun Gothic",system-ui,sans-serif}
-  *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);line-height:1.65}
-  main{max-width:1320px;margin:auto;padding:clamp(18px,4vw,58px)}
-  h1{margin:0;font-size:clamp(1.8rem,4.4vw,3.15rem);line-height:1.2;letter-spacing:-.055em}h2{margin:0;font-size:1.25rem;letter-spacing:-.02em}
-  p{margin:.55rem 0}.intro{color:var(--muted);max-width:72ch}.date{font-size:.86rem;color:var(--accent);margin:0 0 .55rem;font-weight:750}
-  form{margin-top:1.8rem;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 18px 14px}
-  .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(198px,1fr));gap:12px 14px}
-  label{display:grid;gap:4px;font-weight:650;font-size:.86rem;color:var(--ink)}
-  select,input,button{font:inherit;color:inherit;border:1px solid #9bb2ae;border-radius:7px;background:white;min-height:43px;padding:7px 9px;min-width:0}
-  :focus-visible{outline:3px solid #b26b16;outline-offset:3px}button{cursor:pointer;font-weight:650}.actions{display:flex;align-items:center;gap:9px;margin-top:14px;flex-wrap:wrap}.primary{background:var(--accent);color:white;border-color:var(--accent)}
-  .result-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin:1.45rem 0 .6rem}.count{color:var(--muted);font-size:.88rem}
-  .table-wrap{background:white;border:1px solid var(--line);border-radius:10px;overflow:auto}
-  table{width:100%;border-collapse:collapse;text-align:left;font-size:.88rem}
-  th,td{padding:11px 13px;vertical-align:top;border-bottom:1px solid var(--line)}
-  th{background:#e4efeb;color:#173b38;white-space:nowrap}tbody tr:last-child td{border-bottom:0}tbody tr:nth-child(even){background:#f8fbfa}
-  .program{width:20%;min-width:156px}.amount{width:27%}.condition{width:29%}.basis{width:24%}
-  .institution,.small{font-size:.8rem;color:var(--muted)}.result-status{display:block;font-size:.8rem;font-weight:700;margin-top:5px;color:var(--accent)}
-  .computed{margin:6px 0 0;padding-left:17px}.basis a{display:inline;font-weight:650;color:#115f53;text-underline-offset:2px}.citation{margin:0 0 .45rem}.citation:last-child{margin-bottom:0}.citation span{display:block;color:var(--muted);font-size:.78rem}
-  .empty{padding:1rem;color:var(--muted)}.explanation{max-width:104ch;font-size:.84rem;color:var(--muted);margin:1rem 0}
-  @media(max-width:750px){.table-wrap{overflow:visible;background:transparent;border:0}table,tbody,tr,td{display:block}thead{position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden}tbody tr{border:1px solid var(--line);border-radius:9px;margin-bottom:12px;background:white!important;padding:6px 12px}td{border:0;padding:5px 0}.program,.amount,.condition,.basis{width:auto;min-width:0}.amount::before,.condition::before,.basis::before{content:attr(data-label);display:block;font-weight:750;color:#295c55;font-size:.78rem;margin-bottom:1px}.fields{grid-template-columns:repeat(auto-fit,minmax(143px,1fr))}}
+  :root{
+    --ink:#142e34;--muted:#4e666b;--line:#d3e0dd;--surface:#ffffff;--bg:#f6f9f8;--wash:#eaf3f0;
+    --accent:#146153;--accent-ink:#ffffff;--warn:#8a4b00;--warn-bg:#fff4e2;--bad:#a12a2a;--bad-bg:#fdecec;--ok:#1d6b3a;--ok-bg:#e6f4ea;
+    --mark:#ffe58a;--focus:#b26b16;
+    font-family:"Pretendard","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --ink:#e2ecea;--muted:#a3b8b4;--line:#2e4441;--surface:#16211f;--bg:#0f1715;--wash:#1b2d29;
+    --accent:#5cc2ab;--accent-ink:#06211b;--warn:#f3b866;--warn-bg:#3a2a12;--bad:#ff9a9a;--bad-bg:#3d1c1c;--ok:#8fd9a8;--ok-bg:#163223;--mark:#6b5a12;color-scheme:dark}}
+  :root[data-theme="dark"]{--ink:#e2ecea;--muted:#a3b8b4;--line:#2e4441;--surface:#16211f;--bg:#0f1715;--wash:#1b2d29;
+    --accent:#5cc2ab;--accent-ink:#06211b;--warn:#f3b866;--warn-bg:#3a2a12;--bad:#ff9a9a;--bad-bg:#3d1c1c;--ok:#8fd9a8;--ok-bg:#163223;--mark:#6b5a12;color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;color:var(--ink);background:var(--bg);line-height:1.6;font-size:15px}
+  a{color:var(--accent);text-underline-offset:2px}
+  main{max-width:1180px;margin:auto;padding:24px 16px 64px}
+  h1{margin:.2rem 0 .3rem;font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.25;letter-spacing:-.04em}
+  h2{margin:0 0 .6rem;font-size:1.2rem;letter-spacing:-.02em}
+  h3{margin:1.2rem 0 .5rem;font-size:1.02rem}
+  p{margin:.45rem 0}
+  .muted{color:var(--muted)}.small{font-size:.84rem}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+  .badge{display:inline-block;font-size:.76rem;font-weight:700;padding:1px 8px;border-radius:99px;background:var(--wash);color:var(--accent);white-space:nowrap}
+  .badge.warn{background:var(--warn-bg);color:var(--warn)}.badge.bad{background:var(--bad-bg);color:var(--bad)}.badge.ok{background:var(--ok-bg);color:var(--ok)}
+  header .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .notice{border-left:4px solid var(--warn);background:var(--warn-bg);padding:8px 12px;border-radius:6px;margin:12px 0 0;font-size:.88rem}
+  nav.tabs{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);margin:18px -16px 18px;padding:8px 16px 0}
+  nav.tabs button{font:inherit;border:0;background:none;color:var(--muted);padding:8px 12px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;font-weight:650}
+  nav.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+  .panel[hidden]{display:none}
+  .keyfigs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:18px}
+  .keyfig{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:left;font:inherit;color:inherit;cursor:pointer}
+  .keyfig:hover{border-color:var(--accent)}
+  .keyfig .k{font-size:.8rem;color:var(--muted);font-weight:650}.keyfig .v{font-size:1.05rem;font-weight:800;letter-spacing:-.02em;margin:2px 0}.keyfig .s{font-size:.78rem;color:var(--muted)}
+  .search{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  input,select,button.btn{font:inherit;color:var(--ink);background:var(--surface);border:1px solid #9bb2ae;border-radius:8px;min-height:42px;padding:6px 10px;min-width:0}
+  input[type=search]{flex:1 1 320px;font-size:1rem}
+  button.btn{cursor:pointer;font-weight:650}button.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px}
+  label{display:grid;gap:3px;font-size:.82rem;font-weight:650}
+  details.more{margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+  details.more summary{cursor:pointer;font-weight:650;font-size:.9rem}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .chip{font:inherit;font-size:.82rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:3px 10px;cursor:pointer}
+  .chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  .result-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin:18px 0 8px}
+  .result-head .tools{display:flex;gap:6px;flex-wrap:wrap}
+  .result-head .tools button{min-height:34px;font-size:.84rem}
+  ul.results{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .rec{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+  .rec>details>summary{list-style:none;cursor:pointer;padding:10px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:start}
+  .rec>details>summary::-webkit-details-marker{display:none}
+  .rec .agency{font-size:.78rem;color:var(--muted);font-weight:650}
+  .rec .name{font-weight:800;font-size:1rem}
+  .rec .sum{grid-column:1/-1;font-size:.9rem}
+  .rec .state{justify-self:end}
+  .rec .chev{font-size:.8rem;color:var(--muted)}
+  .rec>details[open]>summary{border-bottom:1px solid var(--line)}
+  .rec .body{padding:10px 14px 14px;display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px 14px;font-size:.9rem}
+  .rec .body dt{font-weight:700;color:var(--muted);font-size:.82rem}
+  .rec .body dd{margin:0}
+  .rec .body ul{margin:0;padding-left:18px}
+  .calcbox{background:var(--wash);border-radius:8px;padding:6px 10px;margin:0}
+  .cite{display:block;margin-bottom:6px}.cite .src-meta{display:block;font-size:.78rem;color:var(--muted)}
+  .srcno{font-weight:800;font-size:.78rem;color:var(--muted);margin-right:4px}
+  mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
+  .empty{padding:18px;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:10px}
+  .table-wrap{overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-size:.88rem}
+  th,td{padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+  thead th{background:var(--wash);white-space:nowrap;position:sticky;top:0}
+  tbody th{font-weight:700;min-width:180px}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .calcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+  .calc{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .calc h3{margin-top:0}
+  .calc .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+  .calc output{display:block;margin-top:10px;background:var(--wash);border-radius:8px;padding:8px 10px;font-size:.92rem}
+  .calc output strong{font-size:1.05rem}
+  dl.gloss{display:grid;grid-template-columns:180px minmax(0,1fr);gap:8px 16px}
+  dl.gloss dt{font-weight:800}dl.gloss dd{margin:0}
+  footer{margin-top:36px;font-size:.84rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+  .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:.88rem}
+  @media (max-width:640px){
+    .rec .body,dl.gloss{grid-template-columns:1fr}.rec .body dt{margin-top:4px}
+    .keyfigs{grid-template-columns:1fr 1fr}.keyfig .v{font-size:.95rem}
+  }
+  @media print{
+    nav.tabs,.search,.filters,details.more,.chips,.result-head .tools,.keyfigs{display:none!important}
+    .panel[hidden]{display:block!important}
+    body{background:#fff;color:#000}.rec{break-inside:avoid}
+  }
 </style>
+</head>
+<body>
 <main>
   <header>
-    <p class="date" id="date"></p>
+    <div class="meta"><span class="badge" id="asof"></span><span class="badge warn">비공식 정리 · 원문 우선</span></div>
     <h1>정부지원사업 인건비 기준 조회</h1>
-    <p class="intro">기관·사업·학력 조건에 해당하는 급여 기준, 지원금 상한, 현금 계상 예외를 원문과 함께 확인합니다.</p>
+    <p class="muted">사업명·금액·키워드로 검색하고, 한 줄 요약을 눌러 산정 기준·현금 계상 조건·증빙·원문 근거를 펼쳐 봅니다.</p>
+    <p class="notice">이 페이지는 공개 법령·고시·공고를 정리한 참고 자료입니다. 실제 과제 편성은 해당 공고 회차와 협약에 편입된 규정이 우선합니다. 금액 옆 <b>[S번호]</b>는 출처 탭의 원문 번호입니다.</p>
   </header>
-  <form id="filters" aria-label="인건비 조회 조건">
-    <div class="fields">
-      <label>소관 기관<select id="agency" name="agency"></select></label>
-      <label>사업<select id="program" name="program"></select></label>
-      <label>최종학력<select id="grade" name="grade"></select></label>
-      <label>인력 유형<select id="role" name="role"></select></label>
-      <label>월 급여 원 단위<input name="salary" type="number" min="0" max="9999999999" step="1" inputmode="numeric" placeholder="예 3500000"></label>
-      <label>채용지원 연차<select name="year" id="year"><option value="1">1년차</option><option value="2">2년차</option><option value="3">3년차</option></select></label>
-      <label>현재 재학 과정<select id="course" name="course"></select></label>
-      <label>용역 직급<select id="rank" name="rank"></select></label>
-      <label>R&D 협약일<input name="agreement" type="date"></label>
+
+  <nav class="tabs" role="tablist" aria-label="화면 선택">
+    <button role="tab" id="tab-lookup" aria-controls="panel-lookup" data-tab="lookup">사업별 조회</button>
+    <button role="tab" id="tab-grade" aria-controls="panel-grade" data-tab="grade">학력별 비교표</button>
+    <button role="tab" id="tab-calc" aria-controls="panel-calc" data-tab="calc">계산기</button>
+    <button role="tab" id="tab-sources" aria-controls="panel-sources" data-tab="sources">출처</button>
+    <button role="tab" id="tab-glossary" aria-controls="panel-glossary" data-tab="glossary">용어·변경 이력</button>
+  </nav>
+
+  <section class="panel" id="panel-lookup" role="tabpanel" aria-labelledby="tab-lookup">
+    <h2 class="sr">핵심 수치</h2>
+    <div class="keyfigs" id="keyfigs"></div>
+
+    <div class="search">
+      <input type="search" id="q" placeholder="검색: 학생인건비, 현금, 신규채용, 4100, 도약장려금 …" aria-label="키워드 검색" autocomplete="off">
+      <button class="btn" type="button" id="reset">초기화</button>
     </div>
-    <div class="actions"><button class="primary" type="submit">기준 조회</button><button id="reset" type="button">조건 초기화</button></div>
-  </form>
-  <section aria-labelledby="result-heading">
-    <div class="result-head"><h2 id="result-heading">기관별 기준</h2><span id="count" class="count" aria-live="polite"></span></div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th scope="col">기관과 사업</th><th scope="col">금액과 산정 기준</th><th scope="col">현금 계상·자격 조건</th><th scope="col">근거·시행일</th></tr></thead>
-        <tbody id="results"></tbody>
-      </table>
-      <p id="empty" class="empty" hidden>선택 조건에 해당하는 수록 기준이 없습니다.</p>
+    <div class="chips" id="agency-chips" aria-label="소관 기관"></div>
+    <div class="filters">
+      <label>인력 유형<select id="role"></select></label>
+      <label>최종학력<select id="grade"></select></label>
+      <label>현재 상태<select id="status"><option value="">전체</option></select></label>
     </div>
-    <p class="explanation">월 급여 입력은 신진·고경력 채용지원과 도약장려금의 금액 조건을 비교합니다. 한도 충족 여부는 입력값 기준이며, 실제 적격 여부는 사업 공고와 협약, 개인별 증빙에 따릅니다. 재학 과정은 최종 취득 학위와 별도로 선택합니다.</p>
+    <details class="more" id="more">
+      <summary>개인 조건 입력 (월 급여·연차·재학 과정·용역 직급·협약일)</summary>
+      <div class="filters">
+        <label>월 세전 급여(원)<input id="salary" type="number" min="0" step="10000" inputmode="numeric" placeholder="예 3500000"></label>
+        <label>채용지원 연차<select id="year"><option value="1">1년차</option><option value="2">2년차</option><option value="3">3년차</option></select></label>
+        <label>현재 재학 과정<select id="course"></select></label>
+        <label>용역 직급<select id="rank"></select></label>
+        <label>R&amp;D 협약일<input id="agreement" type="date"></label>
+      </div>
+      <p class="small muted">입력값은 신진·고경력 채용지원, 도약장려금 급여 조건, 학생인건비 하한, 용역 단가, 중기부 관리지침 적용본 판단에만 쓰입니다. 입력값은 브라우저 밖으로 전송되지 않습니다.</p>
+    </details>
+
+    <div class="result-head">
+      <div><strong id="count" aria-live="polite"></strong> <span id="hidden-note" class="small muted"></span></div>
+      <div class="tools">
+        <button class="btn" type="button" id="expand">모두 펼치기</button>
+        <button class="btn" type="button" id="collapse">모두 접기</button>
+        <button class="btn" type="button" id="share">조건 링크 복사</button>
+      </div>
+    </div>
+    <ul class="results" id="results"></ul>
+    <p class="empty" id="empty" hidden>조건에 맞는 기준이 없습니다. 검색어를 줄이거나 필터를 초기화하세요.</p>
   </section>
-  <noscript><p>브라우저에서 JavaScript를 활성화하면 조회할 수 있습니다.</p></noscript>
+
+  <section class="panel" id="panel-grade" role="tabpanel" aria-labelledby="tab-grade" hidden>
+    <h2>학력별 금액 비교</h2>
+    <p class="small muted">직원의 <b>최종학력</b>과 학생연구자의 <b>현재 재학 과정</b>은 서로 다른 조건입니다. 신진 채용 숫자는 1년차 / 2년차 / 3년차 순서입니다.</p>
+    <div class="table-wrap"><table id="grade-table"></table></div>
+    <div id="grade-notes" class="small muted"></div>
+  </section>
+
+  <section class="panel" id="panel-calc" role="tabpanel" aria-labelledby="tab-calc" hidden>
+    <h2>계산기</h2>
+    <p class="small muted">규정 구조를 확인하기 위한 단순 계산입니다. 4대보험 기관부담금·퇴직급여충당금 가산 여부와 공고별 한도는 원문으로 확인하세요.</p>
+    <div class="calcs" id="calcs"></div>
+  </section>
+
+  <section class="panel" id="panel-sources" role="tabpanel" aria-labelledby="tab-sources" hidden>
+    <h2>출처 목록</h2>
+    <p class="small muted">번호는 Word 보고서의 [S번호]와 같습니다. <b>1차</b>는 소관 기관·법령정보센터 원문, <b>2차</b>는 기관 외 게시판 재게시본입니다.</p>
+    <div class="search"><input type="search" id="src-q" placeholder="출처 검색: 고시 번호, 기관명 …" aria-label="출처 검색"></div>
+    <div class="table-wrap" style="margin-top:10px"><table id="src-table"></table></div>
+  </section>
+
+  <section class="panel" id="panel-glossary" role="tabpanel" aria-labelledby="tab-glossary" hidden>
+    <h2>용어</h2>
+    <dl class="gloss" id="glossary"></dl>
+    <h2 style="margin-top:28px">확인 필요·개정 예정</h2>
+    <ul id="pending"></ul>
+    <h2 style="margin-top:28px">변경 이력</h2>
+    <ul id="changes"></ul>
+  </section>
+
+  <footer>
+    <p id="foot"></p>
+    <p>Python 조회 도구와 데이터 원본은 저장소의 <code>wage_rules.py</code>에 있습니다. 데이터 수정 후 <code>python build_html.py</code>로 이 페이지를 다시 만듭니다.</p>
+  </footer>
 </main>
 <script type="application/json" id="data">/*__DATA__*/</script>
 <script>
 'use strict';
-const data = JSON.parse(document.querySelector('#data').textContent);
-const form = document.querySelector('#filters');
-const results = document.querySelector('#results');
-const won = new Intl.NumberFormat('ko-KR');
-const recordAgency = [...new Set(data.records.map(row => row.agency))];
-const program = document.querySelector('#program');
-const agency = document.querySelector('#agency');
-document.querySelector('#date').textContent = `원문 확인일 ${data.asOf}`;
+const D = JSON.parse(document.getElementById('data').textContent);
+const $ = s => document.querySelector(s);
+const won = n => new Intl.NumberFormat('ko-KR').format(Math.round(n)) + '원';
+const man = n => new Intl.NumberFormat('ko-KR').format(n) + '만 원';
+const state = {tab:'lookup', q:'', agency:'', role:'', grade:'', status:'', salary:'', year:'1', course:'', rank:'', agreement:'', open:''};
 
-function el(tag, text, className) {
-  const node = document.createElement(tag);
-  if (text) node.textContent = text;
-  if (className) node.className = className;
-  return node;
-}
-
-function choices(id, entries, label) {
-  const select = document.querySelector(id);
-  const first = new Option(label, '');
-  select.replaceChildren(first, ...entries.map(([value, text]) => new Option(text, value)));
-}
-
-function programs() {
-  const previous = program.value;
-  const visible = data.records.filter(r => !agency.value || r.agency === agency.value);
-  choices('#program', visible.map(r => [r.id, r.name]), '전체 사업');
-  if (visible.some(r => r.id === previous)) program.value = previous;
-}
-
-function evaluate(record, f) {
-  const grade = f.get('grade');
-  const salary = f.get('salary') === '' ? null : Number(f.get('salary'));
-  const course = f.get('course');
-  const rank = f.get('rank');
-  const agreement = f.get('agreement');
-  const out = {status:'공고·협약 및 개인 증빙 확인', amounts:[]};
-  if (agreement && record.agreement_cutoff && agreement < record.agreement_cutoff) {
-    out.status = '이전 협약 적용본 확인 필요';
-  } else if ((record.minimum_contract || record.min_experience) && grade === 'hs') {
-    out.status = '공고의 학위 요건 미충족';
-  } else if (record.minimum_contract && grade) {
-    const minimum = record.minimum_contract[grade][Number(f.get('year')) - 1] * 10000;
-    out.amounts = [['연차별 최소 계약연봉', minimum], ['기본 정부지원액', minimum * .4], ['추가조건 충족 시 정부지원 상한', minimum / 2]];
-    if (salary !== null) out.status = salary * 12 >= minimum ? '계약연봉 조건 충족 · 기타 요건 확인' : '최소 계약연봉 미달';
-  } else if (record.min_experience && grade) {
-    out.status = `학위 취득 후 연구개발 경력 ${record.min_experience[grade]}년 이상 필요`;
-    if (salary !== null) out.amounts = [['입력 급여로 본 연간 지원 상한', Math.min(salary * 6, 50000000)]];
-  } else if (record.student_floor && course) {
-    out.amounts = [['과정별 기관 계상기준 하한', record.student_floor[course]]];
-  } else if (record.contract_rates && rank) {
-    out.amounts = [['월 기준단가(22일·참여율 50%)', record.contract_rates[rank]]];
-  } else if (record.youth_cap && salary !== null && salary > record.youth_cap) {
-    out.status = '월평균 급여 한도 초과';
-  } else if (record.id === 'youth-seoul' && grade === 'hs') {
-    out.status = '고졸 유형 검토 가능 · 채용 시 대학 재학·휴학 등 제외 확인';
+function el(tag, attrs, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v === undefined || v === null || v === false) continue;
+    if (k === 'class') n.className = v; else if (k === 'text') n.textContent = v; else n.setAttribute(k, v === true ? '' : v);
   }
+  for (const kid of kids.flat()) if (kid !== null && kid !== undefined) n.append(kid);
+  return n;
+}
+const norm = s => String(s).toLowerCase().replace(/[,\s·]/g, '');
+const tokens = () => state.q.trim().split(/\s+/).filter(Boolean).map(norm).filter(Boolean);
+function tokenRegex(list) {
+  if (!list.length) return null;
+  const parts = list.map(t => [...t].map((c, i, a) => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + (i < a.length - 1 ? '[,\\s·]?' : '')).join(''));
+  return new RegExp('(' + parts.join('|') + ')', 'gi');
+}
+function hl(text, re) {
+  const frag = document.createDocumentFragment();
+  if (!re || !text) { frag.append(text || ''); return frag; }
+  let last = 0; re.lastIndex = 0; let m;
+  while ((m = re.exec(text))) {
+    if (!m[0]) { re.lastIndex++; continue; }
+    frag.append(text.slice(last, m.index), el('mark', {text: m[0]}));
+    last = m.index + m[0].length;
+  }
+  frag.append(text.slice(last));
+  return frag;
+}
+
+/* ---------- state <-> URL ---------- */
+function readHash() {
+  const p = new URLSearchParams(location.hash.slice(1));
+  for (const k of Object.keys(state)) if (p.has(k)) state[k] = p.get(k);
+  if (!['lookup','grade','calc','sources','glossary'].includes(state.tab)) state.tab = 'lookup';
+}
+function writeHash() {
+  const p = new URLSearchParams();
+  for (const [k, v] of Object.entries(state)) if (v && !(k === 'year' && v === '1') && !(k === 'tab' && v === 'lookup')) p.set(k, v);
+  const h = p.toString();
+  history.replaceState(null, '', h ? '#' + h : location.pathname + location.search);
+}
+
+/* ---------- tabs ---------- */
+function showTab(name) {
+  state.tab = name;
+  for (const b of document.querySelectorAll('nav.tabs button')) {
+    const on = b.dataset.tab === name;
+    b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1;
+    document.getElementById('panel-' + b.dataset.tab).hidden = !on;
+  }
+  writeHash();
+}
+
+/* ---------- evaluation (mirrors wage_rules.evaluate) ---------- */
+function evaluate(r) {
+  const salary = state.salary === '' ? null : Number(state.salary);
+  const out = {status: null, level: '', amounts: []};
+  if (state.agreement && r.agreement_cutoff && state.agreement < r.agreement_cutoff) {
+    out.status = '협약일이 ' + r.agreement_cutoff + ' 이전 · 협약 당시 지침 적용'; out.level = 'warn'; return out;
+  }
+  if (state.grade && r.grades && !r.grades.includes(state.grade)) {
+    out.status = '학력 요건 미해당'; out.level = 'bad'; return out;
+  }
+  if (r.minimum_contract && state.grade) {
+    const min = r.minimum_contract[state.grade][Number(state.year) - 1] * 10000;
+    out.amounts.push(['연차별 기준연봉', min], ['기본 정부지원(40%)', min * .4], ['요건 충족 시 정부지원(50%)', min * .5]);
+    if (salary !== null) { const ok = salary * 12 >= min; out.status = ok ? '입력 연봉이 기준연봉 이상' : '입력 연봉이 기준연봉 미만 · 공고 확인'; out.level = ok ? 'ok' : 'warn'; }
+  } else if (r.min_experience && state.grade) {
+    out.status = '학위 취득 후 연구경력 ' + r.min_experience[state.grade] + '년 이상 필요'; out.level = 'warn';
+    if (salary !== null) out.amounts.push(['입력 급여 기준 연간 지원 상한', Math.min(salary * 12 * .5, D.constants.seniorCap)]);
+  } else if (r.student_floor && state.course) {
+    out.amounts.push(['과정별 기관 계상기준 하한(월)', r.student_floor[state.course]]);
+  } else if (r.contract_rates && state.rank) {
+    out.amounts.push(['월 기준단가(22일·참여율 50%)', r.contract_rates[state.rank]]);
+  } else if (r.youth_cap && salary !== null) {
+    const ok = salary <= r.youth_cap; out.status = ok ? '월평균 급여 조건 이내' : '월평균 급여 한도 초과'; out.level = ok ? 'ok' : 'bad';
+  } else if (r.id === 'minimum-wage' && salary !== null) {
+    const ok = salary >= D.constants.minWageMonth; out.status = ok ? '월 환산 최저임금 이상' : '월 환산 최저임금 미달(209시간 기준)'; out.level = ok ? 'ok' : 'bad';
+  }
+  if (r.computed) out.amounts.push(...r.computed);
   return out;
 }
 
-function rowView(record, filters) {
-  const state = evaluate(record, filters);
-  const row = el('tr');
-  const p = el('td', '', 'program');
-  p.append(el('div', record.agency, 'institution'), el('strong', record.name),
-           el('div', record.organization, 'small'), el('span', state.status, 'result-status'));
-  const amount = el('td', record.amount, 'amount');
-  amount.dataset.label = '금액과 산정 기준';
-  if (state.amounts.length) {
-    const list = el('ul', '', 'computed');
-    for (const [label, value] of state.amounts) list.append(el('li', `${label} ${won.format(value)}원`));
-    amount.append(list);
-  }
-  const condition = el('td', record.cash, 'condition');
-  condition.dataset.label = '현금 계상·자격 조건';
-  const basis = el('td', '', 'basis');
-  basis.dataset.label = '근거·시행일';
-  for (const id of record.refs) {
-    const s = data.sources[id];
-    const citation = el('p', '', 'citation');
-    const link = el('a', s.title);
-    link.href = s.url;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    citation.append(link, el('span', `${s.date} · ${s.section}`));
-    basis.append(citation);
-  }
-  row.append(p, amount, condition, basis);
-  return row;
+/* ---------- lookup ---------- */
+function haystack(r) {
+  return norm([r.agency, r.name, r.organization, r.summary, r.amount, r.cash, (r.evidence || []).join(' '), r.note || '',
+    r.refs.map(id => D.sources[id].title + ' ' + D.sources[id].docNo).join(' '), r.keywords || ''].join(' '));
+}
+const HAY = Object.fromEntries(D.records.map(r => [r.id, haystack(r)]));
+
+function filtered() {
+  const t = tokens();
+  let hiddenByGrade = 0;
+  const list = D.records.filter(r => {
+    if (state.agency && r.agency !== state.agency) return false;
+    if (state.role && !r.roles.includes(state.role)) return false;
+    if (state.status && r.status !== state.status) return false;
+    if (t.length && !t.every(x => HAY[r.id].includes(x))) return false;
+    if (state.grade && r.grades && !r.grades.includes(state.grade)) { hiddenByGrade++; return false; }
+    return true;
+  });
+  return {list, hiddenByGrade};
 }
 
-function showResults() {
-  const f = new FormData(form);
-  const chosen = data.records.filter(r => (!f.get('agency') || r.agency === f.get('agency')) &&
-    (!f.get('program') || r.id === f.get('program')) && (!f.get('role') || r.roles.includes(f.get('role'))));
-  results.replaceChildren(...chosen.map(r => rowView(r, f)));
-  document.querySelector('#count').textContent = `${chosen.length}개 기준`;
-  document.querySelector('#empty').hidden = chosen.length > 0;
+function recView(r, re) {
+  const ev = evaluate(r);
+  const statusBadge = el('span', {class: 'badge ' + (r.status === '현행' ? '' : 'warn'), text: r.status});
+  const sum = el('summary', {},
+    el('div', {}, el('div', {class: 'agency'}, hl(r.agency, re)), el('div', {class: 'name'}, hl(r.name, re))),
+    el('div', {class: 'state'}, statusBadge, ' ', ev.status ? el('span', {class: 'badge ' + ev.level, text: ev.status}) : null),
+    el('div', {class: 'sum'}, hl(r.summary, re), ' ', el('span', {class: 'chev', text: '자세히 ▾'})));
+  const body = el('dl', {class: 'body'});
+  const add = (label, node) => { if (node) body.append(el('dt', {text: label}), el('dd', {}, node)); };
+  add('적용 대상', hl(r.organization, re));
+  add('금액·산정 기준', hl(r.amount, re));
+  if (ev.amounts.length) add('입력값 계산', el('ul', {class: 'calcbox'}, ev.amounts.map(([k, v]) => el('li', {}, k + ' ', el('strong', {text: won(v)})))));
+  add('현금 계상·자격', hl(r.cash, re));
+  if (r.evidence && r.evidence.length) add('확인할 증빙', el('ul', {}, r.evidence.map(x => el('li', {}, hl(x, re)))));
+  if (r.note) add('주의', hl(r.note, re));
+  add('근거', el('div', {}, r.refs.map(id => {
+    const s = D.sources[id];
+    return el('span', {class: 'cite'}, el('span', {class: 'srcno', text: '[' + id + ']'}),
+      el('a', {href: s.url, target: '_blank', rel: 'noopener noreferrer'}, s.title),
+      el('span', {class: 'src-meta', text: [s.docNo, s.date, s.section, s.kind === '2차' ? '2차 게시본' : ''].filter(Boolean).join(' · ')}));
+  })));
+  const det = el('details', {id: 'rec-' + r.id}, sum, body);
+  if (state.open.split(',').includes(r.id)) det.open = true;
+  det.addEventListener('toggle', () => {
+    const set = new Set(state.open.split(',').filter(Boolean));
+    det.open ? set.add(r.id) : set.delete(r.id);
+    state.open = [...set].join(','); writeHash();
+  });
+  return el('li', {class: 'rec'}, det);
 }
 
-choices('#agency', recordAgency.map(a => [a, a]), '전체 기관');
-choices('#grade', Object.entries(data.grades), '전체 학력');
-choices('#role', Object.entries(data.roles), '전체 인력 유형');
-choices('#course', Object.entries(data.courses), '과정 선택');
-choices('#rank', data.ranks.map(rank => [rank, rank]), '직급 선택');
-programs();
-agency.addEventListener('change', programs);
-form.addEventListener('submit', event => { event.preventDefault(); showResults(); });
-document.querySelector('#reset').addEventListener('click', () => { form.reset(); programs(); showResults(); });
-showResults();
+function render() {
+  const {list, hiddenByGrade} = filtered();
+  const re = tokenRegex(tokens());
+  $('#results').replaceChildren(...list.map(r => recView(r, re)));
+  $('#count').textContent = list.length + '개 기준';
+  $('#hidden-note').textContent = hiddenByGrade ? '· 선택한 학력이 지원 요건에 해당하지 않는 ' + hiddenByGrade + '개 사업 숨김' : '';
+  $('#empty').hidden = list.length > 0;
+  for (const c of document.querySelectorAll('#agency-chips .chip')) c.setAttribute('aria-pressed', c.dataset.v === state.agency);
+  writeHash();
+}
+
+function fillSelect(sel, entries, first) {
+  sel.replaceChildren(new Option(first, ''), ...entries.map(([v, t]) => new Option(t, v)));
+}
+
+function keyFigures() {
+  $('#keyfigs').replaceChildren(...D.keyFigures.map(k => {
+    const b = el('button', {class: 'keyfig', type: 'button'}, el('div', {class: 'k', text: k.title}), el('div', {class: 'v', text: k.value}), el('div', {class: 's', text: k.sub + ' [' + k.refs.join('·') + ']'}));
+    b.addEventListener('click', () => {
+      Object.assign(state, {q: '', agency: '', role: '', grade: '', status: '', open: k.record});
+      syncInputs(); render();
+      const d = document.getElementById('rec-' + k.record); if (d) { d.open = true; d.scrollIntoView({behavior: 'smooth', block: 'start'}); }
+    });
+    return b;
+  }));
+}
+
+/* ---------- grade table ---------- */
+function gradeTable() {
+  const g = D.gradeMatrix;
+  const t = $('#grade-table');
+  t.replaceChildren(
+    el('thead', {}, el('tr', {}, el('th', {scope: 'col', text: '사업과 금액의 종류'}), g.columns.map(c => el('th', {scope: 'col', text: c})))),
+    el('tbody', {}, g.rows.map(row => el('tr', {},
+      el('th', {scope: 'row'}, row.label, el('div', {class: 'small muted', text: row.unit + (row.refs ? ' [' + row.refs.join('·') + ']' : '')})),
+      row.cells.map(c => el('td', {class: /^[\d,\s/~최대이상]+$/.test(c) ? 'num' : '', text: c}))))));
+  $('#grade-notes').replaceChildren(...g.notes.map(n => el('p', {text: n})));
+}
+
+/* ---------- calculators ---------- */
+function calc(title, desc, fields, compute) {
+  const box = el('form', {class: 'calc', onsubmit: 'return false'});
+  const out = el('output', {});
+  const inputs = {};
+  const row = el('div', {class: 'row'});
+  for (const f of fields) {
+    let input;
+    if (f.options) { input = el('select', {name: f.name}); f.options.forEach(([v, t]) => input.append(new Option(t, v))); input.value = f.value; }
+    else input = el('input', {name: f.name, type: 'number', min: f.min ?? 0, max: f.max, step: f.step || 'any', value: f.value, inputmode: 'decimal'});
+    inputs[f.name] = input;
+    row.append(el('label', {}, f.label, input));
+  }
+  const run = () => { const v = {}; for (const [k, i] of Object.entries(inputs)) v[k] = i.type === 'number' ? Number(i.value) : i.value; out.replaceChildren(...compute(v)); };
+  box.addEventListener('input', run);
+  box.append(el('h3', {text: title}), el('p', {class: 'small muted', text: desc}), row, out);
+  run();
+  return box;
+}
+function calculators() {
+  const C = D.constants;
+  const gradeOpts = [['associate', '전문학사'], ['bachelor', '학사'], ['master', '석사'], ['doctor', '박사']];
+  $('#calcs').replaceChildren(
+    calc('과제 인건비 계상액', '월 급여 × 계상률 × 참여 개월. 기관부담 보험료·퇴직급여충당금은 별도.', [
+      {name: 'pay', label: '월 기준 급여(원)', value: 3500000, step: 10000},
+      {name: 'rate', label: '계상률(%)', value: 40, max: 130},
+      {name: 'months', label: '참여 개월', value: 6, max: 60}],
+      v => {
+        const total = v.pay * v.rate / 100 * v.months;
+        const warn = v.rate > 100 ? ' · 영리기관·대학은 월 총계상률 100% 이내, 출연연은 연평균 130% 이내' : '';
+        return [el('div', {}, '계상액 ', el('strong', {text: won(total)})), el('div', {class: 'small muted', text: won(v.pay) + ' × ' + v.rate + '% × ' + v.months + '개월' + warn})];
+      }),
+    calc('신진 연구인력 채용지원', '지원액은 실제 연봉이 아니라 공고 기준연봉으로 산정합니다. 기업당 1명, 최대 3년.', [
+      {name: 'grade', label: '취득 학위', value: 'master', options: gradeOpts},
+      {name: 'year', label: '연차', value: '1', options: [['1', '1년차'], ['2', '2년차'], ['3', '3년차']]},
+      {name: 'salary', label: '계약 연봉(만 원)', value: 4500, step: 10}],
+      v => {
+        const min = C.newHireMin[v.grade][Number(v.year) - 1];
+        const ok = v.salary >= min;
+        return [el('div', {}, '기준연봉 ', el('strong', {text: man(min)}), ' · ', el('span', {class: 'badge ' + (ok ? 'ok' : 'warn'), text: ok ? '계약연봉이 기준연봉 이상' : '기준연봉 미만 · 공고 각주 확인'})),
+          el('div', {}, '기본 지원(40%) ', el('strong', {text: man(min * .4)}), ' · 요건 충족 시(50%) ', el('strong', {text: man(min * .5)})),
+          el('div', {class: 'small muted', text: '50%는 협약일 후 1개월 내 내일채움공제 가입 또는 1년 내 중기부 계약학과 지원 시 [' + C.newHireRefs.join('·') + ']'})];
+      }),
+    calc('고경력 연구인력 채용지원', '세전 연봉의 50%, 1인당 연 5,000만 원 한도, 최대 3년.', [
+      {name: 'salary', label: '세전 연봉(만 원)', value: 8000, step: 10}],
+      v => [el('div', {}, '연간 지원 상한 ', el('strong', {text: man(Math.min(v.salary * .5, C.seniorCap / 10000))})),
+        el('div', {class: 'small muted', text: '연봉 ' + man(v.salary) + ' × 50% = ' + man(v.salary * .5) + ' (한도 5,000만 원)'})]),
+    calc('학술연구용역 인건비', '월 50% 단가 × (참여율 ÷ 50%) × 참여 개월. 국가·지자체 발주 공통 2026년 단가.', [
+      {name: 'rank', label: '직급', value: '연구원', options: Object.keys(C.contractRate).map(k => [k, k])},
+      {name: 'rate', label: '참여율(%)', value: 30, max: 100},
+      {name: 'months', label: '참여 개월', value: 4, max: 36}],
+      v => {
+        const unit = C.contractRate[v.rank];
+        return [el('div', {}, '인건비 ', el('strong', {text: won(unit * v.rate / 50 * v.months)})),
+          el('div', {class: 'small muted', text: won(unit) + ' × (' + v.rate + ' ÷ 50) × ' + v.months + '개월 · 100% 환산 월 ' + won(unit * 2)})];
+      }),
+    calc('학생인건비 지급액', '기관 계상기준 × 지급률. 기관 기준은 고시 하한 이상이어야 합니다.', [
+      {name: 'course', label: '재학 과정', value: 'master', options: Object.entries(D.courses)},
+      {name: 'base', label: '기관 계상기준(만 원/월)', value: 240, step: 1},
+      {name: 'rate', label: '지급률(%)', value: 30, max: 100}],
+      v => {
+        const floor = C.studentFloor[v.course] / 10000;
+        const ok = v.base >= floor;
+        return [el('div', {}, '월 지급액 ', el('strong', {text: man(Math.round(v.base * v.rate) / 100)})),
+          el('div', {}, '고시 하한 ' + man(floor) + ' · ', el('span', {class: 'badge ' + (ok ? 'ok' : 'bad'), text: ok ? '기관 기준 하한 이상' : '기관 기준이 하한 미만'}))];
+      }),
+    calc('최저임금 확인', '월 급여가 월 환산 최저임금 이상인지 비교합니다. 산입범위는 최저임금법 기준.', [
+      {name: 'year', label: '적용 연도', value: '2026', options: Object.keys(C.minWage).map(y => [y, y + '년'])},
+      {name: 'hours', label: '월 환산 시간', value: 209, step: 1},
+      {name: 'pay', label: '월 급여(원)', value: 2200000, step: 10000}],
+      v => {
+        const need = C.minWage[v.year] * v.hours;
+        const ok = v.pay >= need;
+        return [el('div', {}, '월 환산 최저임금 ', el('strong', {text: won(need)}), ' · ', el('span', {class: 'badge ' + (ok ? 'ok' : 'bad'), text: ok ? '충족' : '미달'})),
+          el('div', {class: 'small muted', text: '시간급 ' + won(C.minWage[v.year]) + ' × ' + v.hours + '시간'})];
+      })
+  );
+}
+
+/* ---------- sources, glossary ---------- */
+function sourcesTable() {
+  const q = norm($('#src-q').value || '');
+  const rows = Object.entries(D.sources).filter(([id, s]) => !q || norm(id + s.title + s.org + s.docNo + s.section).includes(q));
+  $('#src-table').replaceChildren(
+    el('thead', {}, el('tr', {}, ['번호', '문서', '기관·문서번호', '시행·게시일', '확인 범위', '구분'].map(h => el('th', {scope: 'col', text: h})))),
+    el('tbody', {}, rows.map(([id, s]) => el('tr', {id: 'src-' + id},
+      el('td', {text: id}), el('td', {}, el('a', {href: s.url, target: '_blank', rel: 'noopener noreferrer'}, s.title)),
+      el('td', {text: [s.org, s.docNo].filter(Boolean).join(' · ')}), el('td', {text: s.date}), el('td', {text: s.section}),
+      el('td', {}, el('span', {class: 'badge ' + (s.kind === '2차' ? 'warn' : ''), text: s.kind}))))));
+}
+function glossary() {
+  $('#glossary').replaceChildren(...D.glossary.flatMap(([t, d]) => [el('dt', {text: t}), el('dd', {text: d})]));
+  $('#pending').replaceChildren(...D.pending.map(p => el('li', {text: p})));
+  $('#changes').replaceChildren(...D.changes.map(c => el('li', {}, el('strong', {text: c[0]}), ' ' + c[1])));
+}
+
+/* ---------- inputs ---------- */
+const ids = ['q', 'role', 'grade', 'status', 'salary', 'year', 'course', 'rank', 'agreement'];
+function syncInputs() { for (const k of ids) $('#' + k).value = state[k]; }
+function init() {
+  $('#asof').textContent = '원문 확인일 ' + D.asOf;
+  $('#foot').textContent = '데이터 버전 ' + D.version + ' · 원문 확인일 ' + D.asOf + ' · 수록 기준 ' + D.records.length + '개 · 출처 ' + Object.keys(D.sources).length + '개';
+  const agencies = [...new Set(D.records.map(r => r.agency))];
+  const chip = (v, t) => { const b = el('button', {class: 'chip', type: 'button', 'data-v': v, text: t}); b.addEventListener('click', () => { state.agency = v; render(); }); return b; };
+  $('#agency-chips').replaceChildren(chip('', '전체 기관'), ...agencies.map(a => chip(a, a + ' ' + D.records.filter(r => r.agency === a).length)));
+  fillSelect($('#role'), Object.entries(D.roles), '전체 인력 유형');
+  fillSelect($('#grade'), Object.entries(D.grades), '학력 무관');
+  fillSelect($('#course'), Object.entries(D.courses), '과정 선택');
+  fillSelect($('#rank'), Object.keys(D.constants.contractRate).map(k => [k, k]), '직급 선택');
+  for (const s of [...new Set(D.records.map(r => r.status))]) $('#status').append(new Option(s, s));
+  readHash(); syncInputs();
+  if (state.salary || state.course || state.rank || state.agreement || state.year !== '1') $('#more').open = true;
+  let timer;
+  for (const k of ids) $('#' + k).addEventListener('input', () => { state[k] = $('#' + k).value; clearTimeout(timer); timer = setTimeout(render, k === 'q' ? 120 : 0); });
+  $('#reset').addEventListener('click', () => { Object.assign(state, {q: '', agency: '', role: '', grade: '', status: '', salary: '', year: '1', course: '', rank: '', agreement: '', open: ''}); syncInputs(); render(); });
+  $('#expand').addEventListener('click', () => document.querySelectorAll('#results details').forEach(d => d.open = true));
+  $('#collapse').addEventListener('click', () => document.querySelectorAll('#results details').forEach(d => d.open = false));
+  $('#share').addEventListener('click', async () => {
+    writeHash();
+    try { await navigator.clipboard.writeText(location.href); toast('현재 조건 링크를 복사했습니다'); } catch { toast('주소창의 링크를 복사하세요'); }
+  });
+  $('#src-q').addEventListener('input', sourcesTable);
+  for (const b of document.querySelectorAll('nav.tabs button')) b.addEventListener('click', () => showTab(b.dataset.tab));
+  document.querySelector('nav.tabs').addEventListener('keydown', e => {
+    if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+    const tabs = [...document.querySelectorAll('nav.tabs button')];
+    const i = tabs.findIndex(b => b.dataset.tab === state.tab) + (e.key === 'ArrowRight' ? 1 : -1);
+    const next = tabs[(i + tabs.length) % tabs.length]; showTab(next.dataset.tab); next.focus();
+  });
+  keyFigures(); gradeTable(); calculators(); sourcesTable(); glossary();
+  showTab(state.tab); render();
+  if (state.open) { const d = document.getElementById('rec-' + state.open.split(',')[0]); if (d) d.scrollIntoView({block: 'start'}); }
+}
+function toast(msg) { const t = el('div', {class: 'toast', role: 'status', text: msg}); document.body.append(t); setTimeout(() => t.remove(), 2200); }
+init();
 </script>
+</body>
 </html>
