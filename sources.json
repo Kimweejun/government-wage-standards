@@ -74,13 +74,13 @@
    "kind": "1차"
   },
   "S09": {
-   "org": "중소벤처기업부",
-   "title": "중소기업기술개발 지원사업 관리지침",
-   "docNo": "",
-   "date": "2026-10-23 시행(같은 해 8-3 시행본도 있음)",
-   "section": "9. 다. 1) 직접비 인건비, 14. 다. 2) 불인정 기준, 부칙. 원문은 IRIS 자료실(2026-10-23 등록) 첨부",
-   "url": "https://research.uos.ac.kr/node/8940",
-   "kind": "2차"
+   "org": "중소기업기술정보진흥원",
+   "title": "2026년 중소기업기술개발지원사업 관리지침(2026.10.23. 시행)",
+   "docNo": "IRIS 자료실 74번",
+   "date": "2026-10-23 시행",
+   "section": "첨부 「관리지침 개정(안) 본문.hwp」 9. 다. 1) 직접비 <인건비> 가)~사), 14. 다. 2) 인건비 불인정 기준, 부칙(2026.10.23.) 제3항",
+   "url": "https://www.iris.go.kr/contents/retrieveCntnDataView.do?blbdId=00000025&blltSeq=528373",
+   "kind": "1차"
   },
   "S10": {
    "org": "중소벤처기업부",
@@ -96,7 +96,7 @@
    "title": "표준공정 기반 공정최적화 기술개발사업 시행계획 공고",
    "docNo": "공고 제2026-484호",
    "date": "2026-07-30 공고",
-   "section": "붙임 주요 연구개발비 산정기준, 청년 의무채용",
+   "section": "첨부 「[붙임3] 공정최적화R&D 세부 지원내용.hwp」 주요 연구개발비 산정기준, 청년인력 의무채용, 현금부담 감면 기준",
    "url": "https://www.iris.go.kr/contents/retrieveBsnsAncmView.do?ancmId=023077&ancmPrg=ancmIng",
    "kind": "1차"
   },
@@ -114,7 +114,7 @@
    "title": "2026년 중소기업 연구인력지원사업 공고",
    "docNo": "공고 제2026-69호",
    "date": "2026-02-04 공고",
-   "section": "붙임 내역사업별 지원계획(신진·고경력·공공연 파견), 기준연봉·지원비율",
+   "section": "첨부 공고문(hwpx) 신진 기준연봉 표와 각주, 지원대상·지원조건, 고경력 연봉 50%·연 5,000만 원, 공공연 파견 50%·60%",
    "url": "https://www.mss.go.kr/site/smba/ex/bbs/View.do?bcIdx=1065325&cbIdx=310&parentSeq=1065325",
    "kind": "1차"
   },
@@ -201,10 +201,10 @@
   },
   "S23": {
    "org": "경북테크노파크",
-   "title": "2026년 미래차 부품 기술융합 지원 사업 공고",
-   "docNo": "",
-   "date": "2026-02-26 기업마당 게시",
-   "section": "첨부 공고문(hwp)의 사업비·인건비",
+   "title": "2026년도 미래차 부품 기술융합 지원 사업 공고",
+   "docNo": "공고 제2026-036호",
+   "date": "2026-02-20 공고 · 02-26 기업마당 게시",
+   "section": "첨부 공고문(hwp) 1. 라. 사업비 부담비율, 사업비 구성(인건비 현금·현물), 9. 관련 근거",
    "url": "https://www.bizinfo.go.kr/sii/siia/selectSIIA200Detail.do?pblancId=PBLN_000000000118921",
    "kind": "1차"
   },
@@ -213,7 +213,7 @@
    "title": "2026년 1차 혁신성장 R&D+ 지원사업 모집 공고",
    "docNo": "공고 제2026-0048호",
    "date": "2026-03-09 공고 · 03-16 기업마당 게시",
-   "section": "첨부 공고 [참고2] 사업비 편성기준(13쪽) 인건비·현금 한도",
+   "section": "첨부 공고문(pdf) 10쪽 유의사항(신규고용), 13쪽 [참고2] 사업비 편성기준(인건비·학생연구원)",
    "url": "https://www.bizinfo.go.kr/sii/siia/selectSIIA200Detail.do?pblancId=PBLN_000000000119510",
    "kind": "1차"
   },
@@ -332,6 +332,15 @@
    "date": "2026-08-05 고시",
    "section": "2027-01-01부터 시간급 10,700원",
    "url": "https://www.moel.go.kr/info/lawinfo/instruction/view.do?bbs_seq=20260800150",
+   "kind": "1차"
+  },
+  "S38": {
+   "org": "중소기업기술정보진흥원(SMTECH)",
+   "title": "2026년 신진 연구인력 채용지원 FAQ",
+   "docNo": "[참고1]",
+   "date": "2026-02-04 게시",
+   "section": "기준연봉 준수(미만 계약 시 신청 불가), 협약연봉 산정, 기업부담 계산 예시, 타 사업 중복",
+   "url": "https://www.smtech.go.kr/front/ifg/no/notice02_detail.do?buclYy=2026&ancmId=S02834&buclCd=S6042&dtlAncmSn=1&schdSe=MO5005&aplySn=1",
    "kind": "1차"
   }
  }
