@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="기관·사업·학력별 정부지원사업 인건비 금액과 원문 근거 조회">
+<title>정부지원사업 인건비 기준 조회</title>
+<style>
+  :root{color-scheme:light;--ink:#142e34;--muted:#4e666b;--line:#cfddda;--surface:#fff;--accent:#146153;--wash:#eff6f3;--bg:#f7faf9;font-family:"Noto Sans KR","Malgun Gothic",system-ui,sans-serif}
+  *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);line-height:1.65}
+  main{max-width:1320px;margin:auto;padding:clamp(18px,4vw,58px)}
+  h1{margin:0;font-size:clamp(1.8rem,4.4vw,3.15rem);line-height:1.2;letter-spacing:-.055em}h2{margin:0;font-size:1.25rem;letter-spacing:-.02em}
+  p{margin:.55rem 0}.intro{color:var(--muted);max-width:72ch}.date{font-size:.86rem;color:var(--accent);margin:0 0 .55rem;font-weight:750}
+  form{margin-top:1.8rem;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 18px 14px}
+  .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(198px,1fr));gap:12px 14px}
+  label{display:grid;gap:4px;font-weight:650;font-size:.86rem;color:var(--ink)}
+  select,input,button{font:inherit;color:inherit;border:1px solid #9bb2ae;border-radius:7px;background:white;min-height:43px;padding:7px 9px;min-width:0}
+  :focus-visible{outline:3px solid #b26b16;outline-offset:3px}button{cursor:pointer;font-weight:650}.actions{display:flex;align-items:center;gap:9px;margin-top:14px;flex-wrap:wrap}.primary{background:var(--accent);color:white;border-color:var(--accent)}
+  .result-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin:1.45rem 0 .6rem}.count{color:var(--muted);font-size:.88rem}
+  .table-wrap{background:white;border:1px solid var(--line);border-radius:10px;overflow:auto}
+  table{width:100%;border-collapse:collapse;text-align:left;font-size:.88rem}
+  th,td{padding:11px 13px;vertical-align:top;border-bottom:1px solid var(--line)}
+  th{background:#e4efeb;color:#173b38;white-space:nowrap}tbody tr:last-child td{border-bottom:0}tbody tr:nth-child(even){background:#f8fbfa}
+  .program{width:20%;min-width:156px}.amount{width:27%}.condition{width:29%}.basis{width:24%}
+  .institution,.small{font-size:.8rem;color:var(--muted)}.result-status{display:block;font-size:.8rem;font-weight:700;margin-top:5px;color:var(--accent)}
+  .computed{margin:6px 0 0;padding-left:17px}.basis a{display:inline;font-weight:650;color:#115f53;text-underline-offset:2px}.citation{margin:0 0 .45rem}.citation:last-child{margin-bottom:0}.citation span{display:block;color:var(--muted);font-size:.78rem}
+  .empty{padding:1rem;color:var(--muted)}.explanation{max-width:104ch;font-size:.84rem;color:var(--muted);margin:1rem 0}
+  @media(max-width:750px){.table-wrap{overflow:visible;background:transparent;border:0}table,tbody,tr,td{display:block}thead{position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden}tbody tr{border:1px solid var(--line);border-radius:9px;margin-bottom:12px;background:white!important;padding:6px 12px}td{border:0;padding:5px 0}.program,.amount,.condition,.basis{width:auto;min-width:0}.amount::before,.condition::before,.basis::before{content:attr(data-label);display:block;font-weight:750;color:#295c55;font-size:.78rem;margin-bottom:1px}.fields{grid-template-columns:repeat(auto-fit,minmax(143px,1fr))}}
+</style>
+<main>
+  <header>
+    <p class="date" id="date"></p>
+    <h1>정부지원사업 인건비 기준 조회</h1>
+    <p class="intro">기관·사업·학력 조건에 해당하는 급여 기준, 지원금 상한, 현금 계상 예외를 원문과 함께 확인합니다.</p>
+  </header>
+  <form id="filters" aria-label="인건비 조회 조건">
+    <div class="fields">
+      <label>소관 기관<select id="agency" name="agency"></select></label>
+      <label>사업<select id="program" name="program"></select></label>
+      <label>최종학력<select id="grade" name="grade"></select></label>
+      <label>인력 유형<select id="role" name="role"></select></label>
+      <label>월 급여 원 단위<input name="salary" type="number" min="0" max="9999999999" step="1" inputmode="numeric" placeholder="예 3500000"></label>
+      <label>채용지원 연차<select name="year" id="year"><option value="1">1년차</option><option value="2">2년차</option><option value="3">3년차</option></select></label>
+      <label>현재 재학 과정<select id="course" name="course"></select></label>
+      <label>용역 직급<select id="rank" name="rank"></select></label>
+      <label>R&D 협약일<input name="agreement" type="date"></label>
+    </div>
+    <div class="actions"><button class="primary" type="submit">기준 조회</button><button id="reset" type="button">조건 초기화</button></div>
+  </form>
+  <section aria-labelledby="result-heading">
+    <div class="result-head"><h2 id="result-heading">기관별 기준</h2><span id="count" class="count" aria-live="polite"></span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">기관과 사업</th><th scope="col">금액과 산정 기준</th><th scope="col">현금 계상·자격 조건</th><th scope="col">근거·시행일</th></tr></thead>
+        <tbody id="results"></tbody>
+      </table>
+      <p id="empty" class="empty" hidden>선택 조건에 해당하는 수록 기준이 없습니다.</p>
+    </div>
+    <p class="explanation">월 급여 입력은 신진·고경력 채용지원과 도약장려금의 금액 조건을 비교합니다. 한도 충족 여부는 입력값 기준이며, 실제 적격 여부는 사업 공고와 협약, 개인별 증빙에 따릅니다. 재학 과정은 최종 취득 학위와 별도로 선택합니다.</p>
+  </section>
+  <noscript><p>브라우저에서 JavaScript를 활성화하면 조회할 수 있습니다.</p></noscript>
+</main>
+<script type="application/json" id="data">/*__DATA__*/</script>
+<script>
+'use strict';
+const data = JSON.parse(document.querySelector('#data').textContent);
+const form = document.querySelector('#filters');
+const results = document.querySelector('#results');
+const won = new Intl.NumberFormat('ko-KR');
+const recordAgency = [...new Set(data.records.map(row => row.agency))];
+const program = document.querySelector('#program');
+const agency = document.querySelector('#agency');
+document.querySelector('#date').textContent = `원문 확인일 ${data.asOf}`;
+
+function el(tag, text, className) {
+  const node = document.createElement(tag);
+  if (text) node.textContent = text;
+  if (className) node.className = className;
+  return node;
+}
+
+function choices(id, entries, label) {
+  const select = document.querySelector(id);
+  const first = new Option(label, '');
+  select.replaceChildren(first, ...entries.map(([value, text]) => new Option(text, value)));
+}
+
+function programs() {
+  const previous = program.value;
+  const visible = data.records.filter(r => !agency.value || r.agency === agency.value);
+  choices('#program', visible.map(r => [r.id, r.name]), '전체 사업');
+  if (visible.some(r => r.id === previous)) program.value = previous;
+}
+
+function evaluate(record, f) {
+  const grade = f.get('grade');
+  const salary = f.get('salary') === '' ? null : Number(f.get('salary'));
+  const course = f.get('course');
+  const rank = f.get('rank');
+  const agreement = f.get('agreement');
+  const out = {status:'공고·협약 및 개인 증빙 확인', amounts:[]};
+  if (agreement && record.agreement_cutoff && agreement < record.agreement_cutoff) {
+    out.status = '이전 협약 적용본 확인 필요';
+  } else if ((record.minimum_contract || record.min_experience) && grade === 'hs') {
+    out.status = '공고의 학위 요건 미충족';
+  } else if (record.minimum_contract && grade) {
+    const minimum = record.minimum_contract[grade][Number(f.get('year')) - 1] * 10000;
+    out.amounts = [['연차별 최소 계약연봉', minimum], ['기본 정부지원액', minimum * .4], ['추가조건 충족 시 정부지원 상한', minimum / 2]];
+    if (salary !== null) out.status = salary * 12 >= minimum ? '계약연봉 조건 충족 · 기타 요건 확인' : '최소 계약연봉 미달';
+  } else if (record.min_experience && grade) {
+    out.status = `학위 취득 후 연구개발 경력 ${record.min_experience[grade]}년 이상 필요`;
+    if (salary !== null) out.amounts = [['입력 급여로 본 연간 지원 상한', Math.min(salary * 6, 50000000)]];
+  } else if (record.student_floor && course) {
+    out.amounts = [['과정별 기관 계상기준 하한', record.student_floor[course]]];
+  } else if (record.contract_rates && rank) {
+    out.amounts = [['월 기준단가(22일·참여율 50%)', record.contract_rates[rank]]];
+  } else if (record.youth_cap && salary !== null && salary > record.youth_cap) {
+    out.status = '월평균 급여 한도 초과';
+  } else if (record.id === 'youth-seoul' && grade === 'hs') {
+    out.status = '고졸 유형 검토 가능 · 채용 시 대학 재학·휴학 등 제외 확인';
+  }
+  return out;
+}
+
+function rowView(record, filters) {
+  const state = evaluate(record, filters);
+  const row = el('tr');
+  const p = el('td', '', 'program');
+  p.append(el('div', record.agency, 'institution'), el('strong', record.name),
+           el('div', record.organization, 'small'), el('span', state.status, 'result-status'));
+  const amount = el('td', record.amount, 'amount');
+  amount.dataset.label = '금액과 산정 기준';
+  if (state.amounts.length) {
+    const list = el('ul', '', 'computed');
+    for (const [label, value] of state.amounts) list.append(el('li', `${label} ${won.format(value)}원`));
+    amount.append(list);
+  }
+  const condition = el('td', record.cash, 'condition');
+  condition.dataset.label = '현금 계상·자격 조건';
+  const basis = el('td', '', 'basis');
+  basis.dataset.label = '근거·시행일';
+  for (const id of record.refs) {
+    const s = data.sources[id];
+    const citation = el('p', '', 'citation');
+    const link = el('a', s.title);
+    link.href = s.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    citation.append(link, el('span', `${s.date} · ${s.section}`));
+    basis.append(citation);
+  }
+  row.append(p, amount, condition, basis);
+  return row;
+}
+
+function showResults() {
+  const f = new FormData(form);
+  const chosen = data.records.filter(r => (!f.get('agency') || r.agency === f.get('agency')) &&
+    (!f.get('program') || r.id === f.get('program')) && (!f.get('role') || r.roles.includes(f.get('role'))));
+  results.replaceChildren(...chosen.map(r => rowView(r, f)));
+  document.querySelector('#count').textContent = `${chosen.length}개 기준`;
+  document.querySelector('#empty').hidden = chosen.length > 0;
+}
+
+choices('#agency', recordAgency.map(a => [a, a]), '전체 기관');
+choices('#grade', Object.entries(data.grades), '전체 학력');
+choices('#role', Object.entries(data.roles), '전체 인력 유형');
+choices('#course', Object.entries(data.courses), '과정 선택');
+choices('#rank', data.ranks.map(rank => [rank, rank]), '직급 선택');
+programs();
+agency.addEventListener('change', programs);
+form.addEventListener('submit', event => { event.preventDefault(); showResults(); });
+document.querySelector('#reset').addEventListener('click', () => { form.reset(); programs(); showResults(); });
+showResults();
+</script>
+</html>

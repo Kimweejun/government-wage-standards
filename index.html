@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="기관·사업·학력별 정부지원사업 인건비 금액과 원문 근거 조회">
+<title>정부지원사업 인건비 기준 조회</title>
+<style>
+  :root{color-scheme:light;--ink:#142e34;--muted:#4e666b;--line:#cfddda;--surface:#fff;--accent:#146153;--wash:#eff6f3;--bg:#f7faf9;font-family:"Noto Sans KR","Malgun Gothic",system-ui,sans-serif}
+  *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);line-height:1.65}
+  main{max-width:1320px;margin:auto;padding:clamp(18px,4vw,58px)}
+  h1{margin:0;font-size:clamp(1.8rem,4.4vw,3.15rem);line-height:1.2;letter-spacing:-.055em}h2{margin:0;font-size:1.25rem;letter-spacing:-.02em}
+  p{margin:.55rem 0}.intro{color:var(--muted);max-width:72ch}.date{font-size:.86rem;color:var(--accent);margin:0 0 .55rem;font-weight:750}
+  form{margin-top:1.8rem;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 18px 14px}
+  .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(198px,1fr));gap:12px 14px}
+  label{display:grid;gap:4px;font-weight:650;font-size:.86rem;color:var(--ink)}
+  select,input,button{font:inherit;color:inherit;border:1px solid #9bb2ae;border-radius:7px;background:white;min-height:43px;padding:7px 9px;min-width:0}
+  :focus-visible{outline:3px solid #b26b16;outline-offset:3px}button{cursor:pointer;font-weight:650}.actions{display:flex;align-items:center;gap:9px;margin-top:14px;flex-wrap:wrap}.primary{background:var(--accent);color:white;border-color:var(--accent)}
+  .result-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin:1.45rem 0 .6rem}.count{color:var(--muted);font-size:.88rem}
+  .table-wrap{background:white;border:1px solid var(--line);border-radius:10px;overflow:auto}
+  table{width:100%;border-collapse:collapse;text-align:left;font-size:.88rem}
+  th,td{padding:11px 13px;vertical-align:top;border-bottom:1px solid var(--line)}
+  th{background:#e4efeb;color:#173b38;white-space:nowrap}tbody tr:last-child td{border-bottom:0}tbody tr:nth-child(even){background:#f8fbfa}
+  .program{width:20%;min-width:156px}.amount{width:27%}.condition{width:29%}.basis{width:24%}
+  .institution,.small{font-size:.8rem;color:var(--muted)}.result-status{display:block;font-size:.8rem;font-weight:700;margin-top:5px;color:var(--accent)}
+  .computed{margin:6px 0 0;padding-left:17px}.basis a{display:inline;font-weight:650;color:#115f53;text-underline-offset:2px}.citation{margin:0 0 .45rem}.citation:last-child{margin-bottom:0}.citation span{display:block;color:var(--muted);font-size:.78rem}
+  .empty{padding:1rem;color:var(--muted)}.explanation{max-width:104ch;font-size:.84rem;color:var(--muted);margin:1rem 0}
+  @media(max-width:750px){.table-wrap{overflow:visible;background:transparent;border:0}table,tbody,tr,td{display:block}thead{position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden}tbody tr{border:1px solid var(--line);border-radius:9px;margin-bottom:12px;background:white!important;padding:6px 12px}td{border:0;padding:5px 0}.program,.amount,.condition,.basis{width:auto;min-width:0}.amount::before,.condition::before,.basis::before{content:attr(data-label);display:block;font-weight:750;color:#295c55;font-size:.78rem;margin-bottom:1px}.fields{grid-template-columns:repeat(auto-fit,minmax(143px,1fr))}}
+</style>
+<main>
+  <header>
+    <p class="date" id="date"></p>
+    <h1>정부지원사업 인건비 기준 조회</h1>
+    <p class="intro">기관·사업·학력 조건에 해당하는 급여 기준, 지원금 상한, 현금 계상 예외를 원문과 함께 확인합니다.</p>
+  </header>
+  <form id="filters" aria-label="인건비 조회 조건">
+    <div class="fields">
+      <label>소관 기관<select id="agency" name="agency"></select></label>
+      <label>사업<select id="program" name="program"></select></label>
+      <label>최종학력<select id="grade" name="grade"></select></label>
+      <label>인력 유형<select id="role" name="role"></select></label>
+      <label>월 급여 원 단위<input name="salary" type="number" min="0" max="9999999999" step="1" inputmode="numeric" placeholder="예 3500000"></label>
+      <label>채용지원 연차<select name="year" id="year"><option value="1">1년차</option><option value="2">2년차</option><option value="3">3년차</option></select></label>
+      <label>현재 재학 과정<select id="course" name="course"></select></label>
+      <label>용역 직급<select id="rank" name="rank"></select></label>
+      <label>R&D 협약일<input name="agreement" type="date"></label>
+    </div>
+    <div class="actions"><button class="primary" type="submit">기준 조회</button><button id="reset" type="button">조건 초기화</button></div>
+  </form>
+  <section aria-labelledby="result-heading">
+    <div class="result-head"><h2 id="result-heading">기관별 기준</h2><span id="count" class="count" aria-live="polite"></span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">기관과 사업</th><th scope="col">금액과 산정 기준</th><th scope="col">현금 계상·자격 조건</th><th scope="col">근거·시행일</th></tr></thead>
+        <tbody id="results"></tbody>
+      </table>
+      <p id="empty" class="empty" hidden>선택 조건에 해당하는 수록 기준이 없습니다.</p>
+    </div>
+    <p class="explanation">월 급여 입력은 신진·고경력 채용지원과 도약장려금의 금액 조건을 비교합니다. 한도 충족 여부는 입력값 기준이며, 실제 적격 여부는 사업 공고와 협약, 개인별 증빙에 따릅니다. 재학 과정은 최종 취득 학위와 별도로 선택합니다.</p>
+  </section>
+  <noscript><p>브라우저에서 JavaScript를 활성화하면 조회할 수 있습니다.</p></noscript>
+</main>
+<script type="application/json" id="data">{"asOf":"2026-11-17","grades":{"hs":"고졸","associate":"전문학사","bachelor":"학사","master":"석사","doctor":"박사"},"roles":{"employee":"직원·참여연구자","new":"신규채용 연구자","owner":"개인사업자 대표","student":"학생연구자","contract":"학술연구용역 참여자","hiring":"채용지원 대상","dispatch":"파견 연구자","qualified":"연구전담요원 등록"},"records":[{"id":"minimum-wage","agency":"고용노동부","name":"2026년 최저임금","organization":"근로계약을 맺은 근로자","roles":["employee","new","hiring"],"amount":"시간당 10,320원. 월 209시간 환산 최저 2,156,880원. 임금 상한은 이 고시에서 정하지 않는다.","cash":"근로계약 기준. 과제 재원 인정은 해당 사업 기준에 따름.","refs":["wage"]},{"id":"national-company","agency":"과학기술정보통신부","name":"국가 R&D 공통 기업 기준","organization":"영리 연구개발기관","roles":["employee","new"],"amount":"실제 월 급여와 과제별 계상률로 계산. 학위별 고정 하한·상한 없음. 전체 과제 계상액의 상한은 원칙적으로 월 급여 범위.","cash":"중소·중견 신규채용(공고 전 6개월 포함), 신고 전문연구사업자, 국가소유 성과·기존 인력·대기업 등 소관 부처가 인정한 유형. 기존 인력은 인정 근거 없으면 현물 요건 검토.","refs":["rd"]},{"id":"national-college","agency":"과학기술정보통신부","name":"국가 R&D 대학 기준","organization":"대학·산학협력단 및 전문생산기술연구소 외 기타 비영리","roles":["employee"],"amount":"소속·원소속기관의 실제 월 급여 또는 무소속자의 연구참여계약 기준. 일반 직원의 학위별 고정액 없음.","cash":"참여연구자·연구근접지원인력 현금 가능. 교원·공무원·영리기관 임직원 제한과 강사·겸임·초빙교원·부처 인정 등 단서 확인.","refs":["rd"]},{"id":"national-institute","agency":"과학기술정보통신부","name":"국가 R&D 정부출연기관 기준","organization":"정부출연기관 및 전문생산기술연구소","roles":["employee"],"amount":"실제 연 급여 기준. 참여연구자 연평균 계상 상한은 130%로 관리하되 개인 지급 상한은 기준 연 급여. 연구근접지원인력 연평균 100%.","cash":"연구자·연구근접지원인력 현금 가능. 교원·공무원·영리기관 임직원 제한과 법정 단서 확인.","refs":["rd"]},{"id":"student","agency":"과학기술정보통신부","name":"국가 R&D 학생인건비","organization":"대학·출연기관 등 해당 학생인건비 적용기관","roles":["student"],"amount":"재학 중인 과정이 기준이다. 전문학사·학사 월 130만 원, 석사 월 220만 원, 박사 월 300만 원 이상으로 기관 기준 설정. 통합과정은 기관 기준.","cash":"학생 신분과 연구참여확약서 확인. 기관기준과 지급률을 적용하며 실제 지급액에는 10% 관리기준과 타 기관 지급에 따른 단서가 있음.","refs":["rd"],"student_floor":{"associate":1300000,"bachelor":1300000,"master":2200000,"doctor":3000000}},{"id":"mss-rd","agency":"중소벤처기업부","name":"중소기업기술개발 R&D","organization":"중소기업 등 협약상 수행기관","roles":["employee","new"],"amount":"급여대장과 과제 참여기간 기준. 학위별 공통 최저액·최고액 없음. 신규인력 현금은 인정되는 인건비 범위까지.","cash":"신규채용은 공고 전 6개월 이내 및 개발종료일까지, 반복 접수는 2회차부터 접수공고일 기준 확인. 기존 인력은 지정 기술분야, 전문연구사업자, 접수 마감일 기준 창업 7년 미만·신산업 창업 10년 이내, 육아 시간선택제 여성연구원, 사업별 인정 유형. 10월 23일 전 협약은 원칙적으로 협약 당시 규정.","refs":["mss","mss_order","rd"],"agreement_cutoff":"2026-10-23"},{"id":"mss-owner","agency":"중소벤처기업부","name":"중소기업기술개발 R&D 개인사업자 대표","organization":"개인사업자 대표인 참여연구자","roles":["owner"],"amount":"전년도 종합소득세 신고 기준. 무소득 또는 비교 금액 이하이면 최신 연도 상용근로자 월평균 임금총액 적용. 2025년 기준 통계 월 4,472,000원. 해당 액수는 과제 계상 기준액이다.","cash":"별도 현금 인정 요건과 협약 확인. 10월 23일 전 협약은 원칙적으로 협약 당시 규정.","refs":["mss","earnings"],"agreement_cutoff":"2026-10-23"},{"id":"new-research-hire","agency":"중소벤처기업부","name":"신진 연구인력 채용지원","organization":"기업부설연구소·연구개발전담부서 보유 중소기업","roles":["hiring"],"amount":"전문학사·학사 3,200/3,500/3,800만 원, 석사 4,100/4,500/4,900만 원, 박사 5,000/5,500/6,000만 원의 연차별 최소 계약연봉. 계약연봉 상한은 별도 표기 없음.","cash":"정규직·학위·경력·연령 등 충족 시 고정 지원. 50% 상당액에는 내일채움공제 또는 중기부 계약학과 지원 요건이 적용됨.","refs":["research_hire"],"minimum_contract":{"associate":[3200,3500,3800],"bachelor":[3200,3500,3800],"master":[4100,4500,4900],"doctor":[5000,5500,6000]}},{"id":"senior-research-hire","agency":"중소벤처기업부","name":"고경력 연구인력 채용지원","organization":"기업부설연구소·연구개발전담부서 보유 중소기업","roles":["hiring"],"amount":"공고상 별도 계약연봉 범위 없음. 정부지원액은 적격 세전 연봉의 절반, 1명당 연 최고 5,000만 원, 최대 3년.","cash":"실제 정규직 계약과 학위 취득 후 연구개발 경력을 증빙. 제조AI 공고 예외 대상은 신진과 고경력을 각각 1명 지원 가능.","refs":["research_hire"],"min_experience":{"associate":16,"bachelor":14,"master":10,"doctor":5}},{"id":"public-dispatch","agency":"중소벤처기업부","name":"공공연 연구인력 파견지원","organization":"협약 요건을 충족한 중소기업과 공공연구기관","roles":["dispatch"],"amount":"개별 파견기관 연봉 기준. 최초 3년 이내 연봉의 50%, 정규직 채용 등 추가연장 요건 충족 시 연장 3년간 60%. 공고상 공통 원화 상·하한 없음.","cash":"공공연 파견기관의 인력 매칭과 승인 필요. 석·박사 또는 동등 자격 등 공고 요건 확인.","refs":["research_hire"]},{"id":"industrial-rd","agency":"산업통상부","name":"산업기술혁신사업 R&D","organization":"기업·대학·연구기관 협약 수행기관","roles":["employee","new"],"amount":"공통 대학·기업 월 급여 또는 출연연 연 급여 기준. 학위별 정액 없음. 위기지역 예외의 상한은 적용 정부지원연구개발비의 절반으로 사업비에 연동.","cash":"제2026-374호 사례. 신규 채용액 범위 기존 인력 연동, 지정 SW·설계 등 평가 인정, 창업 초기 중소기업, 전문연구사업자, 시간선택제 여성연구원, 산업디자인전문회사, 산업위기지역.","refs":["industrial","industrial_case"]},{"id":"ict-rd","agency":"과학기술정보통신부","name":"ICT R&D K-클라우드 공고 사례","organization":"중소·중견기업 등 제2026-0444호 수행기관","roles":["employee","new"],"amount":"실제 급여 기준. 학위별 정액 없음. 기존 인력 연동 현금의 최대액은 조건을 충족한 신규 인력의 해당 연도 현금 인건비.","cash":"신규 현금이 연차별 기관 인건비(현금+현물)의 30% 이상일 때 같은 금액까지 기존 인력 현금 산정. 미달 시 연동 금액 전액 불인정. 전문연구사업자·창업기업·ICT 기술분야 등 별도 요건 공고 참조.","refs":["ict","rd"]},{"id":"startup","agency":"중소벤처기업부","name":"예비창업패키지","organization":"창업진흥원·해당 주관기관 사업화","roles":["employee","new"],"amount":"과제에 직접 투입되는 채용 예정 직원의 근로계약상 급여. 공고 인건비 항목에 학위별 원화 기준표 없음.","cash":"근로계약에 따라 지급. 신청자의 배우자·직계존비속 인건비 편성 제한.","refs":["start"]},{"id":"content","agency":"문화체육관광부","name":"지역 대표 글로컬 콘텐츠 제작·재투자","organization":"한국콘텐츠진흥원 해당 사업","roles":["employee","owner"],"amount":"협약기간 내 제작·해외유통 참여 인력 급여. 공개 공고에 학위별 급여 범위 없음.","cash":"대표자 직접 참여 시 자부담금으로만 인정. 협약체결일 이전 지출은 총사업비 산정 불가.","refs":["kocca"]},{"id":"jb","agency":"전북특별자치도","name":"혁신성장 R&D+ 1차","organization":"전북테크노파크 공고 제2026-0048호","roles":["employee","new","student"],"amount":"기업 신규+기존 현금 합계 최대 2,470만 원. 대학·출연연과 학생인건비는 공고 각 항목의 도지원금 한도 확인.","cash":"신규채용 기준일·지원금 규모 조건 충족 필요. 기존 인력 연동 문구와 예시가 달라 기존 인력의 개별 한도는 전문기관 확인 후 산정. 재입사자는 신규 제외.","refs":["local_jb"]},{"id":"gb","agency":"경상북도","name":"미래차 부품 기술융합","organization":"경북테크노파크 해당 사업","roles":["employee","new"],"amount":"과제 급여 기준. 통합 학위별 금액표 없음. 승인된 세부 사업비 기준 확인.","cash":"기존 인력은 현물. 신규 인력에 한해 현금 계상 가능.","refs":["local_gb"]},{"id":"youth-seoul","agency":"고용노동부","name":"청년일자리도약장려금 수도권","organization":"수도권 우선지원대상기업","roles":["hiring"],"amount":"최저임금 준수·월평균 급여 450만 원 이하(채용 근로조건). 기업지원 최고 월 60만 원, 1년 720만 원. 6개월 고용유지 필요.","cash":"고졸 이하가 취업애로 요건의 하나. 대학 재학·휴학자는 해당 고졸 유형 제외. 학위 보유자는 다른 취업애로 요건 검토. 동일 신규 인력에 대한 타 정부 인건비 지원은 원칙 제외, 월 60만 원 미만이면 차액 지원 규정 확인.","refs":["youth","work24"],"youth_cap":4500000},{"id":"youth-local","agency":"고용노동부","name":"청년일자리도약장려금 비수도권","organization":"비수도권 우선지원대상기업·중견기업","roles":["hiring"],"amount":"최저임금 준수·월평균 급여 450만 원 이하(채용 근로조건). 기업지원 최고 월 60만 원, 1년 720만 원. 지역별 청년 근속 인센티브는 별도.","cash":"고졸 여부와 관계없이 근로조건과 청년·기업 요건 확인. 타 정부 신규 인력 인건비 지원 시 원칙 제외, 월 60만 원 미만 차액 규정 확인.","refs":["youth","work24"],"youth_cap":4500000},{"id":"koita-qualification","agency":"과학기술정보통신부","name":"기업부설연구소 연구전담요원 등록","organization":"기업부설연구기관 및 연구개발전담부서","roles":["qualified"],"amount":"연구전담요원 자격 기준. 별도 임금 하한·상한 또는 지원금 규정이 아님.","cash":"고졸도 기사 이상 기술자격 경로가 있다. 중소기업은 산업기사+2년, 기능사+4년, 해당 특성화고·마이스터고 졸업+연구개발 4년 경로가 있다. 학위·업종별 세부 요건 참조.","refs":["koita"]},{"id":"central-contract","agency":"재정경제부","name":"국가 발주 학술연구용역","organization":"국가기관 발주 계약","roles":["contract"],"amount":"월 22일·참여율 50% 기준 책임연구원 3,783,728원, 연구원 2,901,312원, 연구보조원 1,939,429원, 보조원 1,454,621원. 등급과 참여기간에 따라 산정.","cash":"예정가격 기준단가. 발주처 직급·업무 및 자격을 대조. R&D 현물 인정 규정과 별개.","refs":["contract","contract_rule"],"contract_rates":{"책임연구원":3783728,"연구원":2901312,"연구보조원":1939429,"보조원":1454621}},{"id":"municipal-contract","agency":"행정안전부","name":"지자체 발주 학술연구용역","organization":"지방자치단체 발주 계약","roles":["contract"],"amount":"월 22일·참여율 50% 기준 책임연구원 3,783,728원, 연구원 2,901,312원, 연구보조원 1,939,429원, 보조원 1,454,621원. 등급과 참여기간에 따라 산정.","cash":"행정안전부 예규의 예정가격 기준단가. 발주처 직급·업무 및 자격을 대조.","refs":["local_contract"],"contract_rates":{"책임연구원":3783728,"연구원":2901312,"연구보조원":1939429,"보조원":1454621}}],"sources":{"wage":{"title":"최저임금위원회 연도별 최저임금","date":"2025-08-05 고시 · 2026-01-01~12-31 적용","section":"2026년 시간급과 월 209시간 환산","url":"https://www.minimumwage.go.kr/minWage/policy/decisionMain.do"},"rd":{"title":"국가연구개발사업 연구개발비 사용 기준 제2026-38호","date":"2026-05-06 시행","section":"제2·6·7·21·39·40·48·49·57·65·73·74·89·91조","url":"https://www.law.go.kr/admRulInfoP.do?admRulSeq=2100000278740"},"mss":{"title":"2026년 중소기업기술개발 지원사업 관리지침","date":"2026-10-23 시행 · 첨부 본문 부칙 확인","section":"9. 다. 1) 직접비 인건비 가)~사), 14. 다. 2) 불인정 기준 및 부칙","url":"https://research.uos.ac.kr/node/8940"},"mss_order":{"title":"중소기업기술개발 지원사업 운영요령 제2026-6호","date":"2026-01-21 시행","section":"제14·19·21·22조 및 부칙","url":"https://www.law.go.kr/admRulLsInfoP.do?admRulSeq=2100000273462"},"earnings":{"title":"지표누리 한국의 사회지표 월평균 임금","date":"2025년 연간 통계 · 2026-11-17 열람","section":"상용근로자 임금총액 4,472천 원, 고용노동부 사업체노동력조사","url":"https://www.index.go.kr/unity/potal/eNara/sub/showStblGams3.do?freq=Y&idx_cd=F0125&period=N&stts_cd=F012501"},"research_hire":{"title":"중기부 2026년 중소기업 연구인력지원사업 제2026-69호","date":"2026-02-04 공고","section":"붙임 시행계획 2. 내역사업별 지원계획 신진·고경력·공공연 파견","url":"https://www.mss.go.kr/site/smba/ex/bbs/View.do?bcIdx=1065325&cbIdx=310&parentSeq=1065325"},"industrial":{"title":"산업기술혁신사업 공통 운영요령 제2024-218호","date":"2024-12-30 시행 · 2026-11-17 현행 공개본 확인","section":"제20조, 별표 4·5","url":"https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2100000251982"},"industrial_case":{"title":"산업통상부 민군융합핵심소재자립화기술개발 제2026-374호","date":"2026-05-26 공고","section":"인건비 현금 산정 및 기술분류 조건","url":"https://www.iris.go.kr/contents/retrieveBsnsAncmView.do?ancmId=021796&bsnsAncmSn=1&bsnsYyDetail=2026&chngRcveDeFro=2026%2F06%2F02&chngRcveDeTo=2026%2F06%2F26&sorgnBsnsCd=S051592"},"ict":{"title":"과기정통부 AI반도체 K-클라우드 기술개발 제2026-0444호","date":"2026-04-10 회차 공고","section":"영리기관 인건비 현금계상과 청년 의무채용","url":"https://www.iris.go.kr/contents/retrieveBsnsAncmView.do?ancmId=019748&bsnsAncmSn=3&bsnsYyDetail=2026&chngRcveDeFro=2026%2F04%2F10&chngRcveDeTo=2026%2F04%2F23&sorgnBsnsCd=S049922"},"start":{"title":"중기부 2026년 예비창업패키지 모집공고","date":"2026-02-27 게시 · 해당 회차","section":"붙임 사업화 자금 집행 비목 인건비","url":"https://www.mss.go.kr/site/smba/ex/bbs/View.do?bcIdx=1065929&cbIdx=310&parentSeq=1065929"},"kocca":{"title":"한국콘텐츠진흥원 지역 대표 글로컬 콘텐츠 제작·재투자 지원 추천기업 모집","date":"2026-03-17 공고 · 해당 협약기간","section":"지원금 사용범위 및 대표자 자부담","url":"https://welcon.kocca.kr/ko/info/business/1957322"},"youth":{"title":"고용노동부 2026년 청년일자리도약장려금 사업운영 지침","date":"2026-10-22 개정본 게시 · 2026년 채용분","section":"수도권 유형 Ⅱ 지원대상·Ⅳ 지원내용 및 비수도권 유형","url":"https://www.moel.go.kr/news/notice/noticeView.do?bbs_seq=20261000802"},"work24":{"title":"고용24 청년일자리도약장려금 제도안내","date":"2026년 사업 · 2026-11-17 열람","section":"지원내용, 지원자격 및 채용 후 예외 신청","url":"https://www.work24.go.kr/cm/c/f/1100/selecSystInfo.do?currentPageNo=1&recordCountPer=10&systClId=SC00000117&systId=SI00000318"},"koita":{"title":"기업부설연구소법 시행규칙 과기정통부령 제163호","date":"2026-02-01 시행","section":"제2조 제4항 제2·4·5·6호, 제5항 및 제6항","url":"https://www.law.go.kr/lsLinkCommonInfo.do?lspttninfSeq=198229"},"contract":{"title":"재정경제부 2026년 학술연구용역 인건비 기준단가","date":"2026-01-14 게시 · 2026년 기준","section":"예정가격작성기준 별표 5의 22일·참여율 50% 기준단가","url":"https://www.mofe.go.kr/lw/denm/detailTbDenmView.do?menuNo=7090100&searchBbsId1=MOSFBBS_000000000119&searchNttId1=MOSF_000000000076494"},"contract_rule":{"title":"재정경제부 예정가격작성기준 계약예규 제171호","date":"2026-08-25 시행","section":"제23조·제26조 및 별표 5","url":"https://www.law.go.kr/admRulLsInfoP.do?admRulSeq=2100000284228"},"local_contract":{"title":"행정안전부 지방자치단체 입찰 및 계약집행기준 제395호","date":"2026-11-06 시행","section":"제2장 제5절 제4관 및 별표 2, 2026년 단가","url":"https://www.law.go.kr/admRulLsInfoP.do?admRulSeq=2100000287646"},"local_jb":{"title":"전북테크노파크 혁신성장 R&D+ 1차 제2026-0048호","date":"2026-03-16 기업마당 게시 · 해당 회차","section":"첨부 공고 13쪽 인건비, 승인 산출표 확인","url":"https://www.bizinfo.go.kr/sii/siia/selectSIIA200Detail.do?pblancId=PBLN_000000000119510"},"local_gb":{"title":"경북테크노파크 2026년 미래차 부품 기술융합 지원","date":"2026-02-26 기업마당 게시 · 해당 회차","section":"공고 첨부 사업비 인건비","url":"https://www.bizinfo.go.kr/sii/siia/selectSIIA200Detail.do?pblancId=PBLN_000000000118921"}},"ranks":["책임연구원","연구원","연구보조원","보조원"],"courses":{"associate":"전문학사","bachelor":"학사","master":"석사","doctor":"박사"}}</script>
+<script>
+'use strict';
+const data = JSON.parse(document.querySelector('#data').textContent);
+const form = document.querySelector('#filters');
+const results = document.querySelector('#results');
+const won = new Intl.NumberFormat('ko-KR');
+const recordAgency = [...new Set(data.records.map(row => row.agency))];
+const program = document.querySelector('#program');
+const agency = document.querySelector('#agency');
+document.querySelector('#date').textContent = `원문 확인일 ${data.asOf}`;
+
+function el(tag, text, className) {
+  const node = document.createElement(tag);
+  if (text) node.textContent = text;
+  if (className) node.className = className;
+  return node;
+}
+
+function choices(id, entries, label) {
+  const select = document.querySelector(id);
+  const first = new Option(label, '');
+  select.replaceChildren(first, ...entries.map(([value, text]) => new Option(text, value)));
+}
+
+function programs() {
+  const previous = program.value;
+  const visible = data.records.filter(r => !agency.value || r.agency === agency.value);
+  choices('#program', visible.map(r => [r.id, r.name]), '전체 사업');
+  if (visible.some(r => r.id === previous)) program.value = previous;
+}
+
+function evaluate(record, f) {
+  const grade = f.get('grade');
+  const salary = f.get('salary') === '' ? null : Number(f.get('salary'));
+  const course = f.get('course');
+  const rank = f.get('rank');
+  const agreement = f.get('agreement');
+  const out = {status:'공고·협약 및 개인 증빙 확인', amounts:[]};
+  if (agreement && record.agreement_cutoff && agreement < record.agreement_cutoff) {
+    out.status = '이전 협약 적용본 확인 필요';
+  } else if ((record.minimum_contract || record.min_experience) && grade === 'hs') {
+    out.status = '공고의 학위 요건 미충족';
+  } else if (record.minimum_contract && grade) {
+    const minimum = record.minimum_contract[grade][Number(f.get('year')) - 1] * 10000;
+    out.amounts = [['연차별 최소 계약연봉', minimum], ['기본 정부지원액', minimum * .4], ['추가조건 충족 시 정부지원 상한', minimum / 2]];
+    if (salary !== null) out.status = salary * 12 >= minimum ? '계약연봉 조건 충족 · 기타 요건 확인' : '최소 계약연봉 미달';
+  } else if (record.min_experience && grade) {
+    out.status = `학위 취득 후 연구개발 경력 ${record.min_experience[grade]}년 이상 필요`;
+    if (salary !== null) out.amounts = [['입력 급여로 본 연간 지원 상한', Math.min(salary * 6, 50000000)]];
+  } else if (record.student_floor && course) {
+    out.amounts = [['과정별 기관 계상기준 하한', record.student_floor[course]]];
+  } else if (record.contract_rates && rank) {
+    out.amounts = [['월 기준단가(22일·참여율 50%)', record.contract_rates[rank]]];
+  } else if (record.youth_cap && salary !== null && salary > record.youth_cap) {
+    out.status = '월평균 급여 한도 초과';
+  } else if (record.id === 'youth-seoul' && grade === 'hs') {
+    out.status = '고졸 유형 검토 가능 · 채용 시 대학 재학·휴학 등 제외 확인';
+  }
+  return out;
+}
+
+function rowView(record, filters) {
+  const state = evaluate(record, filters);
+  const row = el('tr');
+  const p = el('td', '', 'program');
+  p.append(el('div', record.agency, 'institution'), el('strong', record.name),
+           el('div', record.organization, 'small'), el('span', state.status, 'result-status'));
+  const amount = el('td', record.amount, 'amount');
+  amount.dataset.label = '금액과 산정 기준';
+  if (state.amounts.length) {
+    const list = el('ul', '', 'computed');
+    for (const [label, value] of state.amounts) list.append(el('li', `${label} ${won.format(value)}원`));
+    amount.append(list);
+  }
+  const condition = el('td', record.cash, 'condition');
+  condition.dataset.label = '현금 계상·자격 조건';
+  const basis = el('td', '', 'basis');
+  basis.dataset.label = '근거·시행일';
+  for (const id of record.refs) {
+    const s = data.sources[id];
+    const citation = el('p', '', 'citation');
+    const link = el('a', s.title);
+    link.href = s.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    citation.append(link, el('span', `${s.date} · ${s.section}`));
+    basis.append(citation);
+  }
+  row.append(p, amount, condition, basis);
+  return row;
+}
+
+function showResults() {
+  const f = new FormData(form);
+  const chosen = data.records.filter(r => (!f.get('agency') || r.agency === f.get('agency')) &&
+    (!f.get('program') || r.id === f.get('program')) && (!f.get('role') || r.roles.includes(f.get('role'))));
+  results.replaceChildren(...chosen.map(r => rowView(r, f)));
+  document.querySelector('#count').textContent = `${chosen.length}개 기준`;
+  document.querySelector('#empty').hidden = chosen.length > 0;
+}
+
+choices('#agency', recordAgency.map(a => [a, a]), '전체 기관');
+choices('#grade', Object.entries(data.grades), '전체 학력');
+choices('#role', Object.entries(data.roles), '전체 인력 유형');
+choices('#course', Object.entries(data.courses), '과정 선택');
+choices('#rank', data.ranks.map(rank => [rank, rank]), '직급 선택');
+programs();
+agency.addEventListener('change', programs);
+form.addEventListener('submit', event => { event.preventDefault(); showResults(); });
+document.querySelector('#reset').addEventListener('click', () => { form.reset(); programs(); showResults(); });
+showResults();
+</script>
+</html>
