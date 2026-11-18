@@ -264,7 +264,7 @@ function evaluate(r) {
   if (r.minimum_contract && state.grade) {
     const min = r.minimum_contract[state.grade][Number(state.year) - 1] * 10000;
     out.amounts.push(['연차별 기준연봉', min], ['기본 정부지원(40%)', min * .4], ['요건 충족 시 정부지원(50%)', min * .5]);
-    if (salary !== null) { const ok = salary * 12 >= min; out.status = ok ? '입력 연봉이 기준연봉 이상' : '입력 연봉이 기준연봉 미만 · 공고 확인'; out.level = ok ? 'ok' : 'warn'; }
+    if (salary !== null) { const ok = salary * 12 >= min; out.status = ok ? '기준연봉 이상 · 계약 요건 충족' : '기준연봉 미만 · 신청 불가'; out.level = ok ? 'ok' : 'bad'; }
   } else if (r.min_experience && state.grade) {
     out.status = '학위 취득 후 연구경력 ' + r.min_experience[state.grade] + '년 이상 필요'; out.level = 'warn';
     if (salary !== null) out.amounts.push(['입력 급여 기준 연간 지원 상한', Math.min(salary * 12 * .5, D.constants.seniorCap)]);
@@ -404,15 +404,16 @@ function calculators() {
         const warn = v.rate > 100 ? ' · 영리기관·대학은 월 총계상률 100% 이내, 출연연은 연평균 130% 이내' : '';
         return [el('div', {}, '계상액 ', el('strong', {text: won(total)})), el('div', {class: 'small muted', text: won(v.pay) + ' × ' + v.rate + '% × ' + v.months + '개월' + warn})];
       }),
-    calc('신진 연구인력 채용지원', '지원액은 실제 연봉이 아니라 공고 기준연봉으로 산정합니다. 기업당 1명, 최대 3년.', [
+    calc('신진 연구인력 채용지원', '기준연봉은 계약해야 하는 최소연봉이고, 정부지원금은 실제 연봉과 관계없는 고정액입니다. 기업당 1명, 최대 3년.', [
       {name: 'grade', label: '취득 학위', value: 'master', options: gradeOpts},
       {name: 'year', label: '연차', value: '1', options: [['1', '1년차'], ['2', '2년차'], ['3', '3년차']]},
       {name: 'salary', label: '계약 연봉(만 원)', value: 4500, step: 10}],
       v => {
         const min = C.newHireMin[v.grade][Number(v.year) - 1];
         const ok = v.salary >= min;
-        return [el('div', {}, '기준연봉 ', el('strong', {text: man(min)}), ' · ', el('span', {class: 'badge ' + (ok ? 'ok' : 'warn'), text: ok ? '계약연봉이 기준연봉 이상' : '기준연봉 미만 · 공고 각주 확인'})),
+        return [el('div', {}, '기준연봉 ', el('strong', {text: man(min)}), ' · ', el('span', {class: 'badge ' + (ok ? 'ok' : 'bad'), text: ok ? '계약 요건 충족' : '기준연봉 미만 · 신청 불가'})),
           el('div', {}, '기본 지원(40%) ', el('strong', {text: man(min * .4)}), ' · 요건 충족 시(50%) ', el('strong', {text: man(min * .5)})),
+          el('div', {}, '기업 부담(기본 지원 시) ', el('strong', {text: man(Math.max(v.salary - min * .4, 0))})),
           el('div', {class: 'small muted', text: '50%는 협약일 후 1개월 내 내일채움공제 가입 또는 1년 내 중기부 계약학과 지원 시 [' + C.newHireRefs.join('·') + ']'})];
       }),
     calc('고경력 연구인력 채용지원', '세전 연봉의 50%, 1인당 연 5,000만 원 한도, 최대 3년.', [
