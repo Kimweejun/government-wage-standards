@@ -78,7 +78,7 @@
       <label>최종학력<select id="grade" name="grade"></select></label>
       <label>인력 유형<select id="role" name="role"></select></label>
     </div>
-    <div class="actions"><button class="primary" type="submit">기준 조회</button><button id="reset" type="button">조건 초기화</button></div>
+    <div class="actions"><button class="primary" type="submit">기준 조회</button><button id="reset-filters" type="button">조건 초기화</button></div>
   </form>
   <section aria-labelledby="result-heading">
     <div class="result-head"><h2 id="result-heading">기관별 기준</h2><span id="count" class="count" aria-live="polite"></span></div>
@@ -307,9 +307,9 @@ companyFile.addEventListener('change', async () => {
   try {
     if (file.size > 1_000_000) throw new Error('1MB 이하의 회사 프로필 JSON을 선택하세요.');
     const loaded = readCompanyFile(await file.text());
+    form.reset();
     profile = loaded.profile;
     companyEvidence = loaded.evidence;
-    form.reset();
     scope.value = profile.projects.length ? 'active' : 'candidates';
     renderProfile();
     refreshScope();
@@ -352,7 +352,7 @@ document.querySelector('#clear-company').addEventListener('click', () => {
 scope.addEventListener('change', () => { agency.value = ''; program.value = ''; refreshScope(); });
 agency.addEventListener('change', () => { programs(); showResults(); });
 form.addEventListener('submit', event => { event.preventDefault(); showResults(); });
-document.querySelector('#reset').addEventListener('click', () => { const currentScope = scope.value; form.reset(); scope.value = currentScope; refreshScope(); });
+document.querySelector('#reset-filters').addEventListener('click', () => { const currentScope = scope.value; form.reset(); scope.value = currentScope; refreshScope(); });
 refreshScope();
 </script>
 </html>
