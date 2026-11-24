@@ -342,6 +342,150 @@
    "section": "기준연봉 준수(미만 계약 시 신청 불가), 협약연봉 산정, 기업부담 계산 예시, 타 사업 중복",
    "url": "https://www.smtech.go.kr/front/ifg/no/notice02_detail.do?buclYy=2026&ancmId=S02834&buclCd=S6042&dtlAncmSn=1&schdSe=MO5005&aplySn=1",
    "kind": "1차"
+  },
+  "S39": {
+   "org": "방위사업청",
+   "title": "2026년 K-방산 스타트업 육성사업 공고(수정)",
+   "docNo": "공고 제2026-48호",
+   "date": "2026-04-13 게시",
+   "section": "2 사업내용: 1단계 6개월·최대 1억 원, 선행연구 시제품 최대 7천만 원(25% 기업부담), 단계 구조",
+   "url": "https://dapa.go.kr/dapa/doc/selectDoc.do?bbsSeq=443&docSeq=58435&menuSeq=3031",
+   "kind": "1차"
+  },
+  "S40": {
+   "org": "방위사업청",
+   "title": "방위산업 진입을 위한 지원사업 공통운영규정",
+   "docNo": "훈령 제970호",
+   "date": "2026-06-25 전부개정·시행",
+   "section": "제16~19조(K-방산 스타트업), 제17조 제1항 제9호(정부지원 비목), 제30조, 별표 2(부담 기준·현물 인건비), 부칙 제3조",
+   "url": "https://www.law.go.kr/행정규칙/방위산업진입을위한지원사업공통운영규정",
+   "kind": "1차"
+  },
+  "S41": {
+   "org": "방위사업청",
+   "title": "방산 중소기업 수출지원사업 운영 규정",
+   "docNo": "훈령 제929호",
+   "date": "2025-12-24",
+   "section": "제6장 제22~25조(사업비 조성·사용·정산, 훈령 제970호 제30조로 준용), 부칙 제3조",
+   "url": "https://www.law.go.kr/행정규칙/방산중소기업수출지원사업운영규정",
+   "kind": "1차"
+  },
+  "S42": {
+   "org": "국방기술진흥연구소",
+   "title": "국방벤처 지자체 개발비 지원사업 업무지침",
+   "docNo": "정책기획실-1997",
+   "date": "2024-08-08 시행",
+   "section": "제2조 제7호(기업부담금 현금), 제4조 제2항 제5호(S/W 개발 인건비), 제9조(75%·1억 원), 별지 1 붙임(인건비 소요명세·작성요령). 링크는 경남TP 공고 첨부 공개 사본",
+   "url": "https://www.gntp.or.kr/dextnj/streamDownload?fileSaveNm=20260513120005593_25.pdf",
+   "kind": "보관본"
+  },
+  "S43": {
+   "org": "국방기술진흥연구소",
+   "title": "2026년 하반기 경북국방벤처센터 협약기업 모집 공고",
+   "docNo": "",
+   "date": "2026-07-13 ~ 08-27",
+   "section": "경북 소재 중소·벤처기업, 국방 분야 기술 보유, 관심분야 유무인복합체계·로봇·AI·드론",
+   "url": "https://www.bizinfo.go.kr/sii/siia/selectSIIA200Detail.do?pblancId=PBLN_000000000124332",
+   "kind": "1차"
+  },
+  "S44": {
+   "org": "구미전자정보기술원",
+   "title": "구미시 2026년 청년 정착 인턴십 지원사업 참여기업 모집",
+   "docNo": "",
+   "date": "2026-08-25 ~ 11-30",
+   "section": "구미 소재 상시 5인 이상, 인턴십 운영비 월 110만 원/인, 사내 멘토 수당 월 10만 원/인",
+   "url": "https://www.bizinfo.go.kr/sii/siia/selectSIIA200Detail.do?pblancId=PBLN_000000000125834",
+   "kind": "1차"
+  },
+  "S45": {
+   "org": "구미전자정보기술원",
+   "title": "경북 서부권 2026년 5차 융합 R&D 인재 지역 정착 지원사업",
+   "docNo": "",
+   "date": "2026-06-30 ~ 07-24",
+   "section": "구미·김천·칠곡·상주·성주 소재, 만 45세 이하 이공계 전문학사 이상 신규 인력(2026-03-09 이후 채용), 과제비 1,500만 원·도제식 교육 최대 420만 원",
+   "url": "https://www.bizinfo.go.kr/sii/siia/selectSIIA200Detail.do?pblancId=PBLN_000000000123818",
+   "kind": "1차"
+  },
+  "S46": {
+   "org": "국방기술진흥연구소",
+   "title": "2026년 경북·구미 방산혁신클러스터 판로개척 지원사업",
+   "docNo": "",
+   "date": "상시 접수",
+   "section": "경북·구미 소재 중소·벤처기업, 국내 박람회 회당 1,000만 원·국외 2,000만 원 한도",
+   "url": "https://www.bizinfo.go.kr/sii/siia/selectSIIA200Detail.do?pblancId=PBLN_000000000117782",
+   "kind": "1차"
+  },
+  "S47": {
+   "org": "한국로봇융합연구원",
+   "title": "2026년 경북 로봇 오픈이노베이션 밋업데이(경북 글로벌 로봇생산거점 구축)",
+   "docNo": "",
+   "date": "2026-09-22 ~ 10-06",
+   "section": "구미·경산 로봇 기업, 2026년 12월 후속 기술개발 지원사업 공고 예정(밋업 참여 시 가점)",
+   "url": "https://www.bizinfo.go.kr/sii/siia/selectSIIA200Detail.do?pblancId=PBLN_000000000126748",
+   "kind": "1차"
+  },
+  "S48": {
+   "org": "국립금오공과대학교 RISE사업단",
+   "title": "2026 RISE 산학연 공동 기술개발과제 수요조사 안내",
+   "docNo": "",
+   "date": "2026-03-05 게시",
+   "section": "국고지원금 과제당 3천만~1.5억 원 내외, 산업체 대응자금 국고지원금의 현금 10% 이상, 수행기간 2026-04~12(9개월)",
+   "url": "https://www.kumoh.ac.kr/ko/sub06_01_01_03.do?articleNo=554872&mode=view",
+   "kind": "1차"
+  },
+  "S52": {
+   "org": "국립금오공과대학교 RISE사업단",
+   "title": "2026 RISE 산학연 공동 기술개발과제 2차 모집 공고",
+   "docNo": "",
+   "date": "2026-04-30 게시",
+   "section": "단위과제별 예산·신청자격(K-U시티 방산·반도체, 아이디어 창업밸리, 방산 소부장, AX전환), 과제책임자 본교 전임교원",
+   "url": "https://www.kumoh.ac.kr/ko/sub06_01_01_03.do?articleNo=560967&mode=view",
+   "kind": "1차"
+  },
+  "S53": {
+   "org": "교육부",
+   "title": "RISE 사업비 집행 관련 FAQ",
+   "docNo": "",
+   "date": "2025-09",
+   "section": "\"기업 등\"의 인건비·간접비 편성·집행 불가, 학생인건비는 기업 지원·협력 활동비에서 집행, 산학연 R&BD는 국가R&D 사용용도 준용. 부산RISE센터 게시 파일, 검색 색인 발췌로 확인",
+   "url": "https://brise.re.kr/upload/df7078b1-ae0e-4118-a5f6-9c9cfe715f43/54e42f40-196f-48a4-9c12-34890167a8b4",
+   "kind": "2차"
+  },
+  "S54": {
+   "org": "교육부",
+   "title": "지역혁신중심 대학지원체계(RISE) 앵커 사업비 집행 및 관리 지침(4차 개정)",
+   "docNo": "지역대학지원과-3885",
+   "date": "2026-09-17",
+   "section": "Ⅱ 지원 대상 및 범위, Ⅳ 사업비 항목별 집행기준. 본문이 hwpx로만 공개되어 직접 대조하지 못함",
+   "url": "https://academics.cu.ac.kr/home/board/etc/risecenter/notice/view/31375",
+   "kind": "2차"
+  },
+  "S49": {
+   "org": "중소벤처기업부",
+   "title": "2026년도 창업중심대학 지역기반 (예비)창업기업 모집공고(수정)",
+   "docNo": "공고 제2026-205호",
+   "date": "2026-03-24 게시",
+   "section": "1. 사업개요(업력 7년 이내), 2. 세부 지원내용(평균 5천만·최대 1억 원, 정부 70% 이하·현금 10% 이상·현물 20% 이하), 협약기간",
+   "url": "https://www.mss.go.kr/site/smba/ex/bbs/View.do?bcIdx=1066598&cbIdx=310",
+   "kind": "1차"
+  },
+  "S50": {
+   "org": "중소벤처기업부",
+   "title": "2026년도 창업중심대학 대학발 (예비)창업기업 모집공고(수정)",
+   "docNo": "공고 제2026-206호",
+   "date": "2026-03-24 게시",
+   "section": "대학발 유형(평균 7천만·최대 1.5억 원), 대구대 주력산업(인공지능·지능형 로봇 등)",
+   "url": "https://www.mss.go.kr/site/smba/ex/bbs/View.do?bcIdx=1066599&cbIdx=310",
+   "kind": "1차"
+  },
+  "S51": {
+   "org": "창업진흥원",
+   "title": "창업중심대학 세부관리기준(전면개정)",
+   "docNo": "",
+   "date": "2023-04-14",
+   "section": "인건비 집행(기존 직원·신규 채용·친족), 멘토링비, 현물납부확인서. 2026년판 공개본 없음",
+   "url": "https://www.k-startup.go.kr/user/board/webRFRR_view_reference.do?id=159693&schM=view",
+   "kind": "구판 참고"
   }
  }
 }

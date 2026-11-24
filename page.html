@@ -3,55 +3,104 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="2026년 정부지원사업 인건비 기준을 사업·학력·인력 유형별로 검색하고 원문 근거를 확인하는 조회 도구">
+<meta name="description" content="우리 회사가 수행하는 정부지원 과제별 인건비 기준을 인력 상태(대표자·기존 직원·신규 채용 등)에 따라 한 화면에서 비교하고, 회사 조건으로 신청할 수 있는 사업과 전체 기준을 검색하는 페이지">
 <title>정부지원사업 인건비 기준 조회</title>
 <style>
   :root{
     --ink:#142e34;--muted:#4e666b;--line:#d3e0dd;--surface:#ffffff;--bg:#f6f9f8;--wash:#eaf3f0;
     --accent:#146153;--accent-ink:#ffffff;--warn:#8a4b00;--warn-bg:#fff4e2;--bad:#a12a2a;--bad-bg:#fdecec;--ok:#1d6b3a;--ok-bg:#e6f4ea;
-    --mark:#ffe58a;--focus:#b26b16;
+    --info:#1f4f8a;--info-bg:#e8f0fb;--hl:#fff8d6;--mark:#ffe58a;--focus:#b26b16;
     font-family:"Pretendard","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;color-scheme:light;
   }
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
     --ink:#e2ecea;--muted:#a3b8b4;--line:#2e4441;--surface:#16211f;--bg:#0f1715;--wash:#1b2d29;
-    --accent:#5cc2ab;--accent-ink:#06211b;--warn:#f3b866;--warn-bg:#3a2a12;--bad:#ff9a9a;--bad-bg:#3d1c1c;--ok:#8fd9a8;--ok-bg:#163223;--mark:#6b5a12;color-scheme:dark}}
+    --accent:#5cc2ab;--accent-ink:#06211b;--warn:#f3b866;--warn-bg:#3a2a12;--bad:#ff9a9a;--bad-bg:#3d1c1c;--ok:#8fd9a8;--ok-bg:#163223;
+    --info:#9cc3f5;--info-bg:#17273d;--hl:#2d2a14;--mark:#6b5a12;color-scheme:dark}}
   :root[data-theme="dark"]{--ink:#e2ecea;--muted:#a3b8b4;--line:#2e4441;--surface:#16211f;--bg:#0f1715;--wash:#1b2d29;
-    --accent:#5cc2ab;--accent-ink:#06211b;--warn:#f3b866;--warn-bg:#3a2a12;--bad:#ff9a9a;--bad-bg:#3d1c1c;--ok:#8fd9a8;--ok-bg:#163223;--mark:#6b5a12;color-scheme:dark}
+    --accent:#5cc2ab;--accent-ink:#06211b;--warn:#f3b866;--warn-bg:#3a2a12;--bad:#ff9a9a;--bad-bg:#3d1c1c;--ok:#8fd9a8;--ok-bg:#163223;
+    --info:#9cc3f5;--info-bg:#17273d;--hl:#2d2a14;--mark:#6b5a12;color-scheme:dark}
   *{box-sizing:border-box}
+  html{scroll-padding-top:56px}
   body{margin:0;color:var(--ink);background:var(--bg);line-height:1.6;font-size:15px}
   a{color:var(--accent);text-underline-offset:2px}
-  main{max-width:1180px;margin:auto;padding:24px 16px 64px}
-  h1{margin:.2rem 0 .3rem;font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.25;letter-spacing:-.04em}
-  h2{margin:0 0 .6rem;font-size:1.2rem;letter-spacing:-.02em}
-  h3{margin:1.2rem 0 .5rem;font-size:1.02rem}
+  main{max-width:1240px;margin:auto;padding:20px 16px 64px}
+  h1{margin:.2rem 0 .3rem;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.25;letter-spacing:-.04em}
+  h2{margin:0 0 .5rem;font-size:1.3rem;letter-spacing:-.02em}
+  h3{margin:1.1rem 0 .45rem;font-size:1.02rem}
+  section.block{margin-top:30px;padding-top:4px}
+  section.block>header p{margin:.2rem 0 .8rem}
   p{margin:.45rem 0}
   .muted{color:var(--muted)}.small{font-size:.84rem}
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
   :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
   .badge{display:inline-block;font-size:.76rem;font-weight:700;padding:1px 8px;border-radius:99px;background:var(--wash);color:var(--accent);white-space:nowrap}
-  .badge.warn{background:var(--warn-bg);color:var(--warn)}.badge.bad{background:var(--bad-bg);color:var(--bad)}.badge.ok{background:var(--ok-bg);color:var(--ok)}
-  header .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .notice{border-left:4px solid var(--warn);background:var(--warn-bg);padding:8px 12px;border-radius:6px;margin:12px 0 0;font-size:.88rem}
-  nav.tabs{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);margin:18px -16px 18px;padding:8px 16px 0}
-  nav.tabs button{font:inherit;border:0;background:none;color:var(--muted);padding:8px 12px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;font-weight:650}
-  nav.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
-  .panel[hidden]{display:none}
-  .keyfigs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:18px}
+  .badge.warn{background:var(--warn-bg);color:var(--warn)}.badge.bad{background:var(--bad-bg);color:var(--bad)}.badge.ok{background:var(--ok-bg);color:var(--ok)}.badge.info{background:var(--info-bg);color:var(--info)}
+  .top-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .notice{border-left:4px solid var(--warn);background:var(--warn-bg);padding:8px 12px;border-radius:6px;margin:10px 0 0;font-size:.86rem}
+  nav.jump{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);margin:16px -16px 0;padding:6px 16px}
+  nav.jump a{color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:6px;white-space:nowrap;font-weight:650;font-size:.9rem}
+  nav.jump a:hover,nav.jump a.on{color:var(--accent);background:var(--wash)}
+  /* 회사 */
+  .profile{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+  .pf{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .pf .k{font-size:.78rem;color:var(--muted);font-weight:650}.pf .v{font-weight:800;margin-top:2px}.pf .s{font-size:.8rem;color:var(--muted)}
+  .flags{list-style:none;padding:0;margin:12px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:8px}
+  .flags li{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:8px 12px;font-size:.88rem}
+  .flags b{display:block}
+  /* 과제 매트릭스 */
+  .statusbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:4px 0 10px}
+  .chip{font:inherit;font-size:.84rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:4px 11px;cursor:pointer}
+  .chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  .legend{display:flex;gap:6px;flex-wrap:wrap;font-size:.8rem;margin:0 0 8px}
+  .table-wrap{overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-size:.86rem}
+  th,td{padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+  thead th{background:var(--wash);position:sticky;top:0}
+  table.matrix{min-width:1060px}
+  table.matrix th.ph{min-width:215px;width:22%}
+  table.matrix thead th:first-child,table.matrix tbody th{min-width:132px;position:sticky;left:0;z-index:1;box-shadow:1px 0 0 var(--line)}
+  table.matrix thead th:first-child{z-index:2;background:var(--wash)}
+  table.matrix thead th .org{display:block;font-weight:500;color:var(--muted);font-size:.78rem}
+  table.matrix thead th .sum{display:block;font-weight:500;font-size:.8rem;margin-top:4px}
+  table.matrix tbody th{width:150px;background:var(--surface)}
+  table.matrix tbody th .d{display:block;font-weight:500;color:var(--muted);font-size:.76rem}
+  table.matrix td .t{display:block;margin-top:3px}
+  table.matrix tr.hl th,table.matrix tr.hl td{background:var(--hl)}
+  table.matrix tr.dim{opacity:.45}
+  .cite{white-space:nowrap;font-size:.76rem}
+  .projcards{display:none}
+  .pcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:10px}
+  .pcard h3{margin:0;padding:10px 12px 0}
+  .pcard .org{padding:0 12px;font-size:.8rem;color:var(--muted)}
+  .pcard dl{margin:8px 0 0;padding:0 12px 10px;display:grid;grid-template-columns:110px minmax(0,1fr);gap:6px 10px;font-size:.86rem}
+  .pcard dt{font-weight:700;color:var(--muted)}.pcard dd{margin:0}
+  .pcard dt.hl,.pcard dd.hl{background:var(--hl)}
+  details.proj{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-top:8px}
+  details.proj>summary{cursor:pointer;padding:9px 12px;font-weight:700}
+  details.proj .body{padding:0 14px 12px;display:grid;grid-template-columns:130px minmax(0,1fr);gap:6px 14px;font-size:.88rem}
+  details.proj dt{font-weight:700;color:var(--muted)}details.proj dd{margin:0}
+  details.proj ul{margin:0;padding-left:18px}
+  /* 후보 */
+  .cands{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:10px}
+  .cand{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.88rem}
+  .cand .name{font-weight:800;font-size:.95rem}.cand .org{font-size:.8rem;color:var(--muted)}
+  .cand .row{margin-top:5px}
+  .cand .row b{color:var(--muted);font-weight:700;margin-right:4px}
+  /* 검색 */
+  .keyfigs{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-bottom:14px}
   .keyfig{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:left;font:inherit;color:inherit;cursor:pointer}
   .keyfig:hover{border-color:var(--accent)}
-  .keyfig .k{font-size:.8rem;color:var(--muted);font-weight:650}.keyfig .v{font-size:1.05rem;font-weight:800;letter-spacing:-.02em;margin:2px 0}.keyfig .s{font-size:.78rem;color:var(--muted)}
+  .keyfig .k{font-size:.78rem;color:var(--muted);font-weight:650}.keyfig .v{font-size:1.02rem;font-weight:800;letter-spacing:-.02em;margin:2px 0}.keyfig .s{font-size:.76rem;color:var(--muted)}
   .search{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  input,select,button.btn{font:inherit;color:var(--ink);background:var(--surface);border:1px solid #9bb2ae;border-radius:8px;min-height:42px;padding:6px 10px;min-width:0}
+  input,select,button.btn{font:inherit;color:var(--ink);background:var(--surface);border:1px solid #9bb2ae;border-radius:8px;min-height:40px;padding:6px 10px;min-width:0}
   input[type=search]{flex:1 1 320px;font-size:1rem}
-  button.btn{cursor:pointer;font-weight:650}button.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  button.btn{cursor:pointer;font-weight:650}
   .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px}
   label{display:grid;gap:3px;font-size:.82rem;font-weight:650}
   details.more{margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
   details.more summary{cursor:pointer;font-weight:650;font-size:.9rem}
   .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-  .chip{font:inherit;font-size:.82rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:3px 10px;cursor:pointer}
-  .chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-  .result-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin:18px 0 8px}
+  .result-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin:16px 0 8px}
   .result-head .tools{display:flex;gap:6px;flex-wrap:wrap}
   .result-head .tools button{min-height:34px;font-size:.84rem}
   ul.results{list-style:none;margin:0;padding:0;display:grid;gap:8px}
@@ -69,15 +118,10 @@
   .rec .body dd{margin:0}
   .rec .body ul{margin:0;padding-left:18px}
   .calcbox{background:var(--wash);border-radius:8px;padding:6px 10px;margin:0}
-  .cite{display:block;margin-bottom:6px}.cite .src-meta{display:block;font-size:.78rem;color:var(--muted)}
+  .cite-b{display:block;margin-bottom:6px}.cite-b .src-meta{display:block;font-size:.78rem;color:var(--muted)}
   .srcno{font-weight:800;font-size:.78rem;color:var(--muted);margin-right:4px}
   mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
   .empty{padding:18px;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:10px}
-  .table-wrap{overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
-  table{border-collapse:collapse;width:100%;font-size:.88rem}
-  th,td{padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
-  thead th{background:var(--wash);white-space:nowrap;position:sticky;top:0}
-  tbody th{font-weight:700;min-width:180px}
   td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
   .calcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
   .calc{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
@@ -89,39 +133,65 @@
   dl.gloss dt{font-weight:800}dl.gloss dd{margin:0}
   footer{margin-top:36px;font-size:.84rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
   .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:.88rem}
-  @media (max-width:640px){
-    .rec .body,dl.gloss{grid-template-columns:1fr}.rec .body dt{margin-top:4px}
+  @media (max-width:760px){
+    .matrixwrap{display:none}.projcards{display:block}
+    .rec .body,dl.gloss,details.proj .body{grid-template-columns:1fr}.rec .body dt{margin-top:4px}
     .keyfigs{grid-template-columns:1fr 1fr}.keyfig .v{font-size:.95rem}
   }
   @media print{
-    nav.tabs,.search,.filters,details.more,.chips,.result-head .tools,.keyfigs{display:none!important}
-    .panel[hidden]{display:block!important}
-    body{background:#fff;color:#000}.rec{break-inside:avoid}
+    nav.jump,.search,.filters,details.more,.chips,.result-head .tools,.keyfigs,.statusbar{display:none!important}
+    body{background:#fff;color:#000}.rec,.pcard,.cand{break-inside:avoid}
   }
 </style>
 </head>
 <body>
 <main>
   <header>
-    <div class="meta"><span class="badge" id="asof"></span><span class="badge warn">비공식 정리 · 원문 우선</span></div>
-    <h1>정부지원사업 인건비 기준 조회</h1>
-    <p><a href="./company.html">회사·수행 과제별 인건비 비교</a></p>
-    <p class="muted">사업명·금액·키워드로 검색하고, 한 줄 요약을 눌러 산정 기준·현금 계상 조건·증빙·원문 근거를 펼쳐 봅니다.</p>
-    <p class="notice">이 페이지는 공개 법령·고시·공고를 정리한 참고 자료입니다. 실제 과제 편성은 해당 공고 회차와 협약에 편입된 규정이 우선합니다. 금액 옆 <b>[S번호]</b>는 출처 탭의 원문 번호입니다.</p>
+    <div class="top-meta"><span class="badge" id="asof"></span><span class="badge warn">비공식 정리 · 원문 우선</span></div>
+    <h1 id="title">우리 회사 과제별 인건비 기준</h1>
+    <p class="muted">회사 조건과 수행 중인 과제를 기준으로, 사람의 상태(대표자·기존 직원·신규 채용 등)마다 과제별로 인건비를 어떻게 넣을 수 있는지 한 화면에 모았습니다. 아래로 내려가면 회사 조건으로 신청할 수 있는 사업과 전체 기준 검색이 이어집니다.</p>
+    <p class="notice">공개 원문을 정리한 참고 자료입니다. 실제 편성은 각 과제의 협약서·승인 사업계획서와 전담기관 안내가 우선합니다. 회사의 편성 금액·인력 정보는 싣지 않습니다. <b>[S번호]</b>는 아래 출처 목록의 원문 번호입니다.</p>
   </header>
 
-  <nav class="tabs" role="tablist" aria-label="화면 선택">
-    <button role="tab" id="tab-lookup" aria-controls="panel-lookup" data-tab="lookup">사업별 조회</button>
-    <button role="tab" id="tab-grade" aria-controls="panel-grade" data-tab="grade">학력별 비교표</button>
-    <button role="tab" id="tab-calc" aria-controls="panel-calc" data-tab="calc">계산기</button>
-    <button role="tab" id="tab-sources" aria-controls="panel-sources" data-tab="sources">출처</button>
-    <button role="tab" id="tab-glossary" aria-controls="panel-glossary" data-tab="glossary">용어·변경 이력</button>
+  <nav class="jump" aria-label="이 페이지 안 이동">
+    <a href="#company">우리 회사</a>
+    <a href="#projects">수행 과제 × 인력 상태</a>
+    <a href="#candidates">신청 검토 사업</a>
+    <a href="#lookup">전체 기준 검색</a>
+    <a href="#grade">학력별 비교</a>
+    <a href="#calc">계산기</a>
+    <a href="#sources">출처</a>
+    <a href="#glossary">용어·변경 이력</a>
   </nav>
 
-  <section class="panel" id="panel-lookup" role="tabpanel" aria-labelledby="tab-lookup">
-    <h2 class="sr">핵심 수치</h2>
-    <div class="keyfigs" id="keyfigs"></div>
+  <section class="block" id="company" aria-labelledby="h-company">
+    <header><h2 id="h-company">우리 회사</h2><p class="small muted" id="company-note"></p></header>
+    <div class="profile" id="profile"></div>
+    <h3>회사 조건 때문에 달라지는 인건비·지원 기준</h3>
+    <ul class="flags" id="flags"></ul>
+  </section>
 
+  <section class="block" id="projects" aria-labelledby="h-projects">
+    <header><h2 id="h-projects">수행 과제 × 인력 상태</h2>
+      <p class="small muted">행은 사람의 상태, 열은 지금 수행 중인 과제입니다. 상태를 누르면 그 행이 강조됩니다. 칸의 판정은 원문 규정 기준이며, 같은 사람을 여러 과제에 넣을 때는 과제별 참여율 합계가 100%를 넘지 않게 합니다.</p></header>
+    <div class="statusbar" id="statusbar" aria-label="인력 상태 선택"></div>
+    <div class="legend" id="legend"></div>
+    <div class="matrixwrap table-wrap"><table class="matrix" id="matrix"></table></div>
+    <div class="projcards" id="projcards"></div>
+    <h3>과제별 근거·사업비 구조·증빙</h3>
+    <div id="projdetails"></div>
+  </section>
+
+  <section class="block" id="candidates" aria-labelledby="h-cands">
+    <header><h2 id="h-cands">회사 조건으로 신청을 검토할 사업</h2>
+      <p class="small muted">구미 소재·업력·기업부설연구소·벤처 인증·상시근로자 수로 걸러낸 사업입니다. 모집 상태는 원문 확인일 기준입니다.</p></header>
+    <div class="cands" id="cands"></div>
+  </section>
+
+  <section class="block" id="lookup" aria-labelledby="h-lookup">
+    <header><h2 id="h-lookup">전체 사업 인건비 기준 검색</h2>
+      <p class="small muted">국가 R&amp;D 공통 기준과 부처·사업별 기준 전체입니다. 사업명·금액·키워드로 찾고, 한 줄 요약을 누르면 산정 기준·현금 계상 조건·증빙·원문 근거가 펼쳐집니다.</p></header>
+    <div class="keyfigs" id="keyfigs"></div>
     <div class="search">
       <input type="search" id="q" placeholder="검색: 학생인건비, 현금, 신규채용, 4100, 도약장려금 …" aria-label="키워드 검색" autocomplete="off">
       <button class="btn" type="button" id="reset">초기화</button>
@@ -141,9 +211,8 @@
         <label>용역 직급<select id="rank"></select></label>
         <label>R&amp;D 협약일<input id="agreement" type="date"></label>
       </div>
-      <p class="small muted">입력값은 신진·고경력 채용지원, 도약장려금 급여 조건, 학생인건비 하한, 용역 단가, 중기부 관리지침 적용본 판단에만 쓰입니다. 입력값은 브라우저 밖으로 전송되지 않습니다.</p>
+      <p class="small muted">입력값은 신진·고경력 채용지원, 도약장려금 급여 조건, 학생인건비 하한, 용역 단가, 중기부 관리지침 적용본 판단에만 쓰이며 브라우저 밖으로 전송되지 않습니다.</p>
     </details>
-
     <div class="result-head">
       <div><strong id="count" aria-live="polite"></strong> <span id="hidden-note" class="small muted"></span></div>
       <div class="tools">
@@ -156,38 +225,38 @@
     <p class="empty" id="empty" hidden>조건에 맞는 기준이 없습니다. 검색어를 줄이거나 필터를 초기화하세요.</p>
   </section>
 
-  <section class="panel" id="panel-grade" role="tabpanel" aria-labelledby="tab-grade" hidden>
-    <h2>학력별 금액 비교</h2>
-    <p class="small muted">직원의 <b>최종학력</b>과 학생연구자의 <b>현재 재학 과정</b>은 서로 다른 조건입니다. 신진 채용 숫자는 1년차 / 2년차 / 3년차 순서입니다.</p>
+  <section class="block" id="grade" aria-labelledby="h-grade">
+    <header><h2 id="h-grade">학력별 금액 비교</h2>
+      <p class="small muted">직원의 <b>최종학력</b>과 학생연구자의 <b>현재 재학 과정</b>은 서로 다른 조건입니다. 신진 채용 숫자는 1년차 / 2년차 / 3년차 순서입니다.</p></header>
     <div class="table-wrap"><table id="grade-table"></table></div>
     <div id="grade-notes" class="small muted"></div>
   </section>
 
-  <section class="panel" id="panel-calc" role="tabpanel" aria-labelledby="tab-calc" hidden>
-    <h2>계산기</h2>
-    <p class="small muted">규정 구조를 확인하기 위한 단순 계산입니다. 4대보험 기관부담금·퇴직급여충당금 가산 여부와 공고별 한도는 원문으로 확인하세요.</p>
+  <section class="block" id="calc" aria-labelledby="h-calc">
+    <header><h2 id="h-calc">계산기</h2>
+      <p class="small muted">규정 구조를 확인하기 위한 단순 계산입니다. 4대보험 기관부담금·퇴직급여충당금 가산 여부와 사업별 한도는 원문으로 확인하세요.</p></header>
     <div class="calcs" id="calcs"></div>
   </section>
 
-  <section class="panel" id="panel-sources" role="tabpanel" aria-labelledby="tab-sources" hidden>
-    <h2>출처 목록</h2>
-    <p class="small muted">번호는 Word 보고서의 [S번호]와 같습니다. <b>1차</b>는 소관 기관·법령정보센터 원문, <b>2차</b>는 기관 외 게시판 재게시본입니다.</p>
+  <section class="block" id="sources" aria-labelledby="h-src">
+    <header><h2 id="h-src">출처 목록</h2>
+      <p class="small muted">번호는 Word 보고서의 [S번호]와 같습니다. <b>1차</b>는 소관 기관·법령정보센터 원문, <b>2차</b>는 기관 외 재게시본, <b>보관본</b>은 전담기관이 협약기업에 배포한 문서입니다.</p></header>
     <div class="search"><input type="search" id="src-q" placeholder="출처 검색: 고시 번호, 기관명 …" aria-label="출처 검색"></div>
     <div class="table-wrap" style="margin-top:10px"><table id="src-table"></table></div>
   </section>
 
-  <section class="panel" id="panel-glossary" role="tabpanel" aria-labelledby="tab-glossary" hidden>
-    <h2>용어</h2>
-    <dl class="gloss" id="glossary"></dl>
-    <h2 style="margin-top:28px">확인 필요·개정 예정</h2>
+  <section class="block" id="glossary" aria-labelledby="h-gloss">
+    <header><h2 id="h-gloss">용어</h2></header>
+    <dl class="gloss" id="gloss"></dl>
+    <h3>확인 필요·개정 예정</h3>
     <ul id="pending"></ul>
-    <h2 style="margin-top:28px">변경 이력</h2>
+    <h3>변경 이력</h3>
     <ul id="changes"></ul>
   </section>
 
   <footer>
     <p id="foot"></p>
-    <p>Python 조회 도구와 데이터 원본은 저장소의 <code>wage_rules.py</code>에 있습니다. 데이터 수정 후 <code>python build_html.py</code>로 이 페이지를 다시 만듭니다.</p>
+    <p>데이터 원본은 저장소의 <code>wage_rules.py</code>(공통 기준)와 <code>company_profile.py</code>(회사·수행 과제)입니다. 수정 후 <code>python build_html.py</code>로 이 페이지를 다시 만듭니다.</p>
   </footer>
 </main>
 <script type="application/json" id="data">/*__DATA__*/</script>
@@ -197,7 +266,7 @@ const D = JSON.parse(document.getElementById('data').textContent);
 const $ = s => document.querySelector(s);
 const won = n => new Intl.NumberFormat('ko-KR').format(Math.round(n)) + '원';
 const man = n => new Intl.NumberFormat('ko-KR').format(n) + '만 원';
-const state = {tab:'lookup', q:'', agency:'', role:'', grade:'', status:'', salary:'', year:'1', course:'', rank:'', agreement:'', open:''};
+const state = {who: '', q: '', agency: '', role: '', grade: '', status: '', salary: '', year: '1', course: '', rank: '', agreement: '', open: ''};
 
 function el(tag, attrs, ...kids) {
   const n = document.createElement(tag);
@@ -205,9 +274,30 @@ function el(tag, attrs, ...kids) {
     if (v === undefined || v === null || v === false) continue;
     if (k === 'class') n.className = v; else if (k === 'text') n.textContent = v; else n.setAttribute(k, v === true ? '' : v);
   }
-  for (const kid of kids.flat()) if (kid !== null && kid !== undefined) n.append(kid);
+  for (const kid of kids.flat()) if (kid !== null && kid !== undefined && kid !== false) n.append(kid);
   return n;
 }
+/* "[S04·S13]" 표기를 원문 링크로 바꾼다 */
+function rich(text) {
+  const frag = document.createDocumentFragment();
+  const re = /\[(S\d{2}(?:·S\d{2})*)\]/g;
+  let last = 0, m;
+  while ((m = re.exec(text))) {
+    frag.append(text.slice(last, m.index));
+    const span = el('span', {class: 'cite'}, '[');
+    m[1].split('·').forEach((id, i) => {
+      if (i) span.append('·');
+      const s = D.sources[id];
+      span.append(s ? el('a', {href: s.url, target: '_blank', rel: 'noopener noreferrer', title: s.title, text: id}) : id);
+    });
+    span.append(']');
+    frag.append(span);
+    last = re.lastIndex;
+  }
+  frag.append(text.slice(last));
+  return frag;
+}
+const refTxt = refs => (refs && refs.length ? ' [' + refs.join('·') + ']' : '');
 const norm = s => String(s).toLowerCase().replace(/[,\s·]/g, '');
 const tokens = () => state.q.trim().split(/\s+/).filter(Boolean).map(norm).filter(Boolean);
 function tokenRegex(list) {
@@ -230,38 +320,86 @@ function hl(text, re) {
 
 /* ---------- state <-> URL ---------- */
 function readHash() {
-  const p = new URLSearchParams(location.hash.slice(1));
+  const raw = location.hash.slice(1);
+  if (!raw.includes('=')) return;
+  const p = new URLSearchParams(raw);
   for (const k of Object.keys(state)) if (p.has(k)) state[k] = p.get(k);
-  if (!['lookup','grade','calc','sources','glossary'].includes(state.tab)) state.tab = 'lookup';
 }
 function writeHash() {
   const p = new URLSearchParams();
-  for (const [k, v] of Object.entries(state)) if (v && !(k === 'year' && v === '1') && !(k === 'tab' && v === 'lookup')) p.set(k, v);
+  for (const [k, v] of Object.entries(state)) if (v && !(k === 'year' && v === '1')) p.set(k, v);
   const h = p.toString();
   history.replaceState(null, '', h ? '#' + h : location.pathname + location.search);
 }
 
-/* ---------- tabs ---------- */
-function showTab(name) {
-  state.tab = name;
-  for (const b of document.querySelectorAll('nav.tabs button')) {
-    const on = b.dataset.tab === name;
-    b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1;
-    document.getElementById('panel-' + b.dataset.tab).hidden = !on;
-  }
-  writeHash();
+/* ---------- 우리 회사 ---------- */
+const VERDICT = {'현금 가능': 'ok', '조건부': 'warn', '현물만': 'info', '불가': 'bad', '해당 없음': '', '확인 필요': 'warn'};
+function company() {
+  const c = D.company;
+  $('#title').textContent = c.name + ' 과제별 인건비 기준';
+  $('#company-note').textContent = '회사 정보 기준일 ' + c.asOf + ' · 업력은 원문 확인일 기준으로 계산했습니다.';
+  $('#profile').replaceChildren(...c.facts.map(f => el('div', {class: 'pf'}, el('div', {class: 'k', text: f.k}), el('div', {class: 'v', text: f.v}), f.s ? el('div', {class: 's', text: f.s}) : null)));
+  $('#flags').replaceChildren(...c.flags.map(f => el('li', {}, el('b', {text: f.label}), rich(f.effect))));
 }
 
-/* ---------- evaluation (mirrors wage_rules.evaluate) ---------- */
+/* ---------- 수행 과제 × 인력 상태 ---------- */
+function cellNode(cell) {
+  if (!cell) return el('span', {class: 'muted', text: '—'});
+  return el('div', {}, el('span', {class: 'badge ' + (VERDICT[cell.v] ?? ''), text: cell.v}), el('span', {class: 't'}, rich(cell.t + refTxt(cell.refs))));
+}
+function projects() {
+  const P = D.projects, S = D.statuses;
+  $('#statusbar').replaceChildren(
+    ...[{key: '', label: '전체 보기'}, ...S].map(s => {
+      const b = el('button', {class: 'chip', type: 'button', 'data-who': s.key, text: s.label});
+      b.addEventListener('click', () => { state.who = s.key; markWho(); writeHash(); });
+      return b;
+    }));
+  $('#legend').replaceChildren(...Object.entries(VERDICT).filter(([k]) => k !== '해당 없음').map(([k, c]) => el('span', {class: 'badge ' + c, text: k})));
+  $('#matrix').replaceChildren(
+    el('thead', {}, el('tr', {}, el('th', {scope: 'col', text: '인력 상태'}),
+      P.map(p => el('th', {scope: 'col', class: 'ph'}, p.short, el('span', {class: 'org', text: p.org}), el('span', {class: 'sum'}, el('span', {class: 'badge ' + (p.statusLevel || ''), text: p.status}), ' ', rich(p.labor)))))),
+    el('tbody', {}, S.map(s => el('tr', {'data-who': s.key},
+      el('th', {scope: 'row'}, s.label, el('span', {class: 'd', text: s.desc})),
+      P.map(p => el('td', {}, cellNode(p.cells[s.key])))))));
+  $('#projcards').replaceChildren(...P.map(p => el('div', {class: 'pcard'},
+    el('h3', {text: p.short}), el('div', {class: 'org'}, p.org + ' · ', rich(p.labor)),
+    el('dl', {}, S.flatMap(s => [el('dt', {'data-who': s.key, text: s.label}), el('dd', {'data-who': s.key}, cellNode(p.cells[s.key]))])))));
+  $('#projdetails').replaceChildren(...P.map(p => {
+    const body = el('dl', {class: 'body'});
+    const add = (k, v) => { if (v && (!Array.isArray(v) || v.length)) body.append(el('dt', {text: k}), el('dd', {}, Array.isArray(v) ? el('ul', {}, v.map(x => el('li', {}, rich(x)))) : rich(v))); };
+    add('사업 정식 명칭', p.name); add('주관·전담', p.org); add('근거 규정', p.basis); add('과제 기간', p.period);
+    add('사업비 구조', p.budget); add('인건비 산식', p.formula); add('증빙', p.evidence); add('주의', p.notes);
+    return el('details', {class: 'proj', id: 'proj-' + p.id}, el('summary', {}, p.short + ' — ', el('span', {class: 'badge ' + (p.statusLevel || ''), text: p.status})), body);
+  }));
+  markWho();
+}
+function markWho() {
+  for (const b of document.querySelectorAll('#statusbar .chip')) b.setAttribute('aria-pressed', b.dataset.who === state.who);
+  for (const tr of document.querySelectorAll('#matrix tbody tr')) { tr.classList.toggle('hl', !!state.who && tr.dataset.who === state.who); tr.classList.toggle('dim', !!state.who && tr.dataset.who !== state.who); }
+  for (const n of document.querySelectorAll('#projcards [data-who]')) n.classList.toggle('hl', !!state.who && n.dataset.who === state.who);
+}
+
+/* ---------- 신청 검토 사업 ---------- */
+function candidates() {
+  const lv = {'모집 중': 'ok', '상시': 'ok', '정기 공고': 'info', '공고 예정': 'info', '마감': 'bad', '확인 필요': 'warn'};
+  $('#cands').replaceChildren(...D.candidates.map(c => el('div', {class: 'cand'},
+    el('div', {}, el('span', {class: 'name', text: c.name}), ' ', el('span', {class: 'badge ' + (lv[c.state] || ''), text: c.state + (c.deadline ? ' · ' + c.deadline : '')})),
+    el('div', {class: 'org', text: c.org}),
+    el('div', {class: 'row'}, el('b', {text: '맞는 조건'}), rich(c.fit)),
+    el('div', {class: 'row'}, el('b', {text: '인건비'}), rich(c.labor + refTxt(c.refs))),
+    c.record ? el('div', {class: 'row small'}, el('a', {href: '#lookup', 'data-open': c.record, text: '전체 기준에서 자세히 보기 →'})) : null)));
+  for (const a of document.querySelectorAll('#cands a[data-open]')) a.addEventListener('click', e => { e.preventDefault(); openRecord(a.dataset.open); });
+}
+
+/* ---------- evaluation (wage_rules.evaluate와 같은 규칙) ---------- */
 function evaluate(r) {
   const salary = state.salary === '' ? null : Number(state.salary);
   const out = {status: null, level: '', amounts: []};
   if (state.agreement && r.agreement_cutoff && state.agreement < r.agreement_cutoff) {
     out.status = '협약일이 ' + r.agreement_cutoff + ' 이전 · 협약 당시 지침 적용'; out.level = 'warn'; return out;
   }
-  if (state.grade && r.grades && !r.grades.includes(state.grade)) {
-    out.status = '학력 요건 미해당'; out.level = 'bad'; return out;
-  }
+  if (state.grade && r.grades && !r.grades.includes(state.grade)) { out.status = '학력 요건 미해당'; out.level = 'bad'; return out; }
   if (r.minimum_contract && state.grade) {
     const min = r.minimum_contract[state.grade][Number(state.year) - 1] * 10000;
     out.amounts.push(['연차별 기준연봉', min], ['기본 정부지원(40%)', min * .4], ['요건 충족 시 정부지원(50%)', min * .5]);
@@ -282,13 +420,12 @@ function evaluate(r) {
   return out;
 }
 
-/* ---------- lookup ---------- */
+/* ---------- 전체 기준 검색 ---------- */
 function haystack(r) {
   return norm([r.agency, r.name, r.organization, r.summary, r.amount, r.cash, (r.evidence || []).join(' '), r.note || '',
     r.refs.map(id => D.sources[id].title + ' ' + D.sources[id].docNo).join(' '), r.keywords || ''].join(' '));
 }
 const HAY = Object.fromEntries(D.records.map(r => [r.id, haystack(r)]));
-
 function filtered() {
   const t = tokens();
   let hiddenByGrade = 0;
@@ -302,13 +439,11 @@ function filtered() {
   });
   return {list, hiddenByGrade};
 }
-
 function recView(r, re) {
   const ev = evaluate(r);
-  const statusBadge = el('span', {class: 'badge ' + (r.status === '현행' ? '' : 'warn'), text: r.status});
   const sum = el('summary', {},
     el('div', {}, el('div', {class: 'agency'}, hl(r.agency, re)), el('div', {class: 'name'}, hl(r.name, re))),
-    el('div', {class: 'state'}, statusBadge, ' ', ev.status ? el('span', {class: 'badge ' + ev.level, text: ev.status}) : null),
+    el('div', {class: 'state'}, el('span', {class: 'badge ' + (r.status === '현행' ? '' : 'warn'), text: r.status}), ' ', ev.status ? el('span', {class: 'badge ' + ev.level, text: ev.status}) : null),
     el('div', {class: 'sum'}, hl(r.summary, re), ' ', el('span', {class: 'chev', text: '자세히 ▾'})));
   const body = el('dl', {class: 'body'});
   const add = (label, node) => { if (node) body.append(el('dt', {text: label}), el('dd', {}, node)); };
@@ -320,9 +455,9 @@ function recView(r, re) {
   if (r.note) add('주의', hl(r.note, re));
   add('근거', el('div', {}, r.refs.map(id => {
     const s = D.sources[id];
-    return el('span', {class: 'cite'}, el('span', {class: 'srcno', text: '[' + id + ']'}),
+    return el('span', {class: 'cite-b'}, el('span', {class: 'srcno', text: '[' + id + ']'}),
       el('a', {href: s.url, target: '_blank', rel: 'noopener noreferrer'}, s.title),
-      el('span', {class: 'src-meta', text: [s.docNo, s.date, s.section, s.kind === '2차' ? '2차 게시본' : ''].filter(Boolean).join(' · ')}));
+      el('span', {class: 'src-meta', text: [s.docNo, s.date, s.section, s.kind !== '1차' ? s.kind : ''].filter(Boolean).join(' · ')}));
   })));
   const det = el('details', {id: 'rec-' + r.id}, sum, body);
   if (state.open.split(',').includes(r.id)) det.open = true;
@@ -333,7 +468,6 @@ function recView(r, re) {
   });
   return el('li', {class: 'rec'}, det);
 }
-
 function render() {
   const {list, hiddenByGrade} = filtered();
   const re = tokenRegex(tokens());
@@ -344,28 +478,25 @@ function render() {
   for (const c of document.querySelectorAll('#agency-chips .chip')) c.setAttribute('aria-pressed', c.dataset.v === state.agency);
   writeHash();
 }
-
-function fillSelect(sel, entries, first) {
-  sel.replaceChildren(new Option(first, ''), ...entries.map(([v, t]) => new Option(t, v)));
+function openRecord(id) {
+  Object.assign(state, {q: '', agency: '', role: '', grade: '', status: '', open: id});
+  syncInputs(); render();
+  const d = document.getElementById('rec-' + id);
+  if (d) { d.open = true; d.scrollIntoView({behavior: 'smooth', block: 'start'}); }
 }
-
+function fillSelect(sel, entries, first) { sel.replaceChildren(new Option(first, ''), ...entries.map(([v, t]) => new Option(t, v))); }
 function keyFigures() {
   $('#keyfigs').replaceChildren(...D.keyFigures.map(k => {
     const b = el('button', {class: 'keyfig', type: 'button'}, el('div', {class: 'k', text: k.title}), el('div', {class: 'v', text: k.value}), el('div', {class: 's', text: k.sub + ' [' + k.refs.join('·') + ']'}));
-    b.addEventListener('click', () => {
-      Object.assign(state, {q: '', agency: '', role: '', grade: '', status: '', open: k.record});
-      syncInputs(); render();
-      const d = document.getElementById('rec-' + k.record); if (d) { d.open = true; d.scrollIntoView({behavior: 'smooth', block: 'start'}); }
-    });
+    b.addEventListener('click', () => openRecord(k.record));
     return b;
   }));
 }
 
-/* ---------- grade table ---------- */
+/* ---------- 학력별 비교표 ---------- */
 function gradeTable() {
   const g = D.gradeMatrix;
-  const t = $('#grade-table');
-  t.replaceChildren(
+  $('#grade-table').replaceChildren(
     el('thead', {}, el('tr', {}, el('th', {scope: 'col', text: '사업과 금액의 종류'}), g.columns.map(c => el('th', {scope: 'col', text: c})))),
     el('tbody', {}, g.rows.map(row => el('tr', {},
       el('th', {scope: 'row'}, row.label, el('div', {class: 'small muted', text: row.unit + (row.refs ? ' [' + row.refs.join('·') + ']' : '')})),
@@ -373,7 +504,7 @@ function gradeTable() {
   $('#grade-notes').replaceChildren(...g.notes.map(n => el('p', {text: n})));
 }
 
-/* ---------- calculators ---------- */
+/* ---------- 계산기 ---------- */
 function calc(title, desc, fields, compute) {
   const box = el('form', {class: 'calc', onsubmit: 'return false'});
   const out = el('output', {});
@@ -396,14 +527,13 @@ function calculators() {
   const C = D.constants;
   const gradeOpts = [['associate', '전문학사'], ['bachelor', '학사'], ['master', '석사'], ['doctor', '박사']];
   $('#calcs').replaceChildren(
-    calc('과제 인건비 계상액', '월 급여 × 계상률 × 참여 개월. 기관부담 보험료·퇴직급여충당금은 별도.', [
+    calc('과제 인건비 계상액', '월 급여 × 참여율(계상률) × 참여 개월. 국방벤처 과제의 "실지급액(연봉/12) × 참여율 × 참여기간" 산식도 같습니다.', [
       {name: 'pay', label: '월 기준 급여(원)', value: 3500000, step: 10000},
-      {name: 'rate', label: '계상률(%)', value: 40, max: 130},
+      {name: 'rate', label: '참여율(%)', value: 40, max: 130},
       {name: 'months', label: '참여 개월', value: 6, max: 60}],
       v => {
-        const total = v.pay * v.rate / 100 * v.months;
         const warn = v.rate > 100 ? ' · 영리기관·대학은 월 총계상률 100% 이내, 출연연은 연평균 130% 이내' : '';
-        return [el('div', {}, '계상액 ', el('strong', {text: won(total)})), el('div', {class: 'small muted', text: won(v.pay) + ' × ' + v.rate + '% × ' + v.months + '개월' + warn})];
+        return [el('div', {}, '계상액 ', el('strong', {text: won(v.pay * v.rate / 100 * v.months)})), el('div', {class: 'small muted', text: won(v.pay) + ' × ' + v.rate + '% × ' + v.months + '개월' + warn})];
       }),
     calc('신진 연구인력 채용지원', '기준연봉은 계약해야 하는 최소연봉이고, 정부지원금은 실제 연봉과 관계없는 고정액입니다. 기업당 1명, 최대 3년.', [
       {name: 'grade', label: '취득 학위', value: 'master', options: gradeOpts},
@@ -453,7 +583,7 @@ function calculators() {
   );
 }
 
-/* ---------- sources, glossary ---------- */
+/* ---------- 출처·용어 ---------- */
 function sourcesTable() {
   const q = norm($('#src-q').value || '');
   const rows = Object.entries(D.sources).filter(([id, s]) => !q || norm(id + s.title + s.org + s.docNo + s.section).includes(q));
@@ -462,20 +592,28 @@ function sourcesTable() {
     el('tbody', {}, rows.map(([id, s]) => el('tr', {id: 'src-' + id},
       el('td', {text: id}), el('td', {}, el('a', {href: s.url, target: '_blank', rel: 'noopener noreferrer'}, s.title)),
       el('td', {text: [s.org, s.docNo].filter(Boolean).join(' · ')}), el('td', {text: s.date}), el('td', {text: s.section}),
-      el('td', {}, el('span', {class: 'badge ' + (s.kind === '2차' ? 'warn' : ''), text: s.kind}))))));
+      el('td', {}, el('span', {class: 'badge ' + (s.kind === '1차' ? '' : 'warn'), text: s.kind}))))));
 }
 function glossary() {
-  $('#glossary').replaceChildren(...D.glossary.flatMap(([t, d]) => [el('dt', {text: t}), el('dd', {text: d})]));
-  $('#pending').replaceChildren(...D.pending.map(p => el('li', {text: p})));
+  $('#gloss').replaceChildren(...D.glossary.flatMap(([t, d]) => [el('dt', {text: t}), el('dd', {text: d})]));
+  $('#pending').replaceChildren(...D.pending.map(p => el('li', {}, rich(p))));
   $('#changes').replaceChildren(...D.changes.map(c => el('li', {}, el('strong', {text: c[0]}), ' ' + c[1])));
 }
 
-/* ---------- inputs ---------- */
+/* ---------- 입력·이동 ---------- */
 const ids = ['q', 'role', 'grade', 'status', 'salary', 'year', 'course', 'rank', 'agreement'];
 function syncInputs() { for (const k of ids) $('#' + k).value = state[k]; }
+function navSpy() {
+  const links = [...document.querySelectorAll('nav.jump a')];
+  const secs = links.map(a => document.querySelector(a.getAttribute('href')));
+  const io = new IntersectionObserver(entries => {
+    for (const e of entries) if (e.isIntersecting) links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id));
+  }, {rootMargin: '-40% 0px -55% 0px'});
+  secs.forEach(s => s && io.observe(s));
+}
 function init() {
-  $('#asof').textContent = '원문 확인일 ' + D.asOf;
-  $('#foot').textContent = '데이터 버전 ' + D.version + ' · 원문 확인일 ' + D.asOf + ' · 수록 기준 ' + D.records.length + '개 · 출처 ' + Object.keys(D.sources).length + '개';
+  $('#asof').textContent = '원문 확인일 ' + D.company.asOf + '(회사·과제) · ' + D.asOf + '(전체 기준)';
+  $('#foot').textContent = '데이터 버전 ' + D.version + ' · 원문 확인일 ' + D.asOf + ' · 수행 과제 ' + D.projects.length + '개 · 검토 사업 ' + D.candidates.length + '개 · 전체 기준 ' + D.records.length + '개 · 출처 ' + Object.keys(D.sources).length + '개';
   const agencies = [...new Set(D.records.map(r => r.agency))];
   const chip = (v, t) => { const b = el('button', {class: 'chip', type: 'button', 'data-v': v, text: t}); b.addEventListener('click', () => { state.agency = v; render(); }); return b; };
   $('#agency-chips').replaceChildren(chip('', '전체 기관'), ...agencies.map(a => chip(a, a + ' ' + D.records.filter(r => r.agency === a).length)));
@@ -496,16 +634,9 @@ function init() {
     try { await navigator.clipboard.writeText(location.href); toast('현재 조건 링크를 복사했습니다'); } catch { toast('주소창의 링크를 복사하세요'); }
   });
   $('#src-q').addEventListener('input', sourcesTable);
-  for (const b of document.querySelectorAll('nav.tabs button')) b.addEventListener('click', () => showTab(b.dataset.tab));
-  document.querySelector('nav.tabs').addEventListener('keydown', e => {
-    if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
-    const tabs = [...document.querySelectorAll('nav.tabs button')];
-    const i = tabs.findIndex(b => b.dataset.tab === state.tab) + (e.key === 'ArrowRight' ? 1 : -1);
-    const next = tabs[(i + tabs.length) % tabs.length]; showTab(next.dataset.tab); next.focus();
-  });
-  keyFigures(); gradeTable(); calculators(); sourcesTable(); glossary();
-  showTab(state.tab); render();
+  company(); projects(); candidates(); keyFigures(); gradeTable(); calculators(); sourcesTable(); glossary(); render(); navSpy();
   if (state.open) { const d = document.getElementById('rec-' + state.open.split(',')[0]); if (d) d.scrollIntoView({block: 'start'}); }
+  else if (state.who) document.getElementById('projects').scrollIntoView({block: 'start'});
 }
 function toast(msg) { const t = el('div', {class: 'toast', role: 'status', text: msg}); document.body.append(t); setTimeout(() => t.remove(), 2200); }
 init();
