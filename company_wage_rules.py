@@ -123,7 +123,15 @@ def lookup(*, agency='', program='', grade='', role='', scope='all', profile=Non
         status = item.get('role_status', {}).get(role, item['status'])
         if grade in item.get('excluded_grades', ()):
             status = '공고의 학위 요건 미충족'
-        result = {**item, 'status': status, 'sources': [SOURCES[ref] for ref in item['refs']]}
+        evidence = profile.get('projectEvidence', {}).get(item['id'])
+        refs = evidence.get('referenceIds', item['refs']) if evidence else item['refs']
+        result = {**item, 'status': status, 'sources': [SOURCES[ref] for ref in refs]}
+        if evidence:
+            result['company_evidence'] = evidence
+            result['status'] = evidence['status']
+            result['sources'].extend(evidence.get('extraSources', []))
+            if role in evidence.get('roles', {}):
+                result['company_role_note'] = evidence['roles'][role]
         if fit:
             result['company_fit'] = fit
         results.append(result)

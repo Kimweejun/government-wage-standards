@@ -18,9 +18,15 @@ def main():
              'grades': GRADES, 'roles': roles, 'records': RULES, 'sources': SOURCES}
     template = (base / 'company_template.html').read_text(encoding='utf-8')
     if args.profile:
-        if args.output.resolve().parent == base:
+        if args.output.resolve().is_relative_to(base):
             parser.error('회사 프로필을 포함한 HTML은 GitHub 게시용 폴더 밖에 저장하세요.')
-        model['profile'] = json.loads(args.profile.read_text(encoding='utf-8-sig'))
+        profile = json.loads(args.profile.read_text(encoding='utf-8-sig'))
+        evidence = profile.pop('projectEvidence', {})
+        unknown = evidence.keys() - {row['id'] for row in RULES if row.get('portfolio')}
+        if unknown:
+            parser.error(f'회사 근거에 등록되지 않은 과제 ID가 있습니다. {", ".join(sorted(unknown))}')
+        model['profile'] = profile
+        model['companyEvidence'] = evidence
         template = template.replace('href="./index.html"',
                                     'href="https://kimweejun.github.io/government-wage-standards/"')
     payload = json.dumps(model, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c')
